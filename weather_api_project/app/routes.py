@@ -1,5 +1,3 @@
-# app/routes.py
-
 from flask import Blueprint, request, jsonify, current_app
 from .weather_service import get_weather_by_coordinates
 

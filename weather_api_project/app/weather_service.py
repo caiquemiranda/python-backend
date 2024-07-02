@@ -1,5 +1,3 @@
-# app/weather_service.py
-
 import requests
 from flask import current_app
 
