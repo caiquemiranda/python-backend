@@ -18,7 +18,7 @@ Esta é uma API REST simples desenvolvida em Flask para consultar dados climáti
 1. **Clonar o repositório:**
 
 ```bash
-git clone https://github.com/caiquemiranda/weather-api-project.git
+git clone https://github.com/caiquemiranda/weather_api_project.git
 cd weather-api-project
  ```
 
