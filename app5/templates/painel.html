@@ -1,0 +1,39 @@
+{% extends 'base.html' %}
+
+{% block title %}Painel do Usuário - Sistema de Autenticação{% endblock %}
+
+{% block content %}
+<div class="card">
+    <h1>Painel do Usuário</h1>
+
+    <p>Bem-vindo, <strong>{{ session.nome_usuario }}</strong>! Esta é uma área protegida que só pode ser acessada após o
+        login.</p>
+
+    <div style="margin: 1.5rem 0;">
+        <a href="{{ url_for('novo_post') }}" class="btn btn-success">+ Novo Post</a>
+    </div>
+
+    <h2>Seus Posts</h2>
+
+    {% if posts %}
+    {% for post in posts %}
+    <div class="card" style="border-left: 5px solid #3498db;">
+        <h3 style="margin-top: 0;">{{ post.titulo }}</h3>
+        <p style="white-space: pre-line;">{{ post.conteudo }}</p>
+        <p style="font-size: 0.8rem; color: #777;">Criado em: {{ post.data_criacao }}</p>
+
+        <div style="margin-top: 1rem;">
+            <a href="{{ url_for('editar_post', post_id=post.id) }}" class="btn btn-primary">Editar</a>
+            <a href="{{ url_for('excluir_post', post_id=post.id) }}" class="btn btn-danger"
+                onclick="return confirm('Tem certeza que deseja excluir este post?')">Excluir</a>
+        </div>
+    </div>
+    {% endfor %}
+    {% else %}
+    <div class="card" style="text-align: center; padding: 2rem;">
+        <p>Você ainda não criou nenhum post.</p>
+        <a href="{{ url_for('novo_post') }}" class="btn btn-success">Criar seu primeiro post</a>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

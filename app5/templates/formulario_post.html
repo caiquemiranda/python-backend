@@ -1,0 +1,26 @@
+{% extends 'base.html' %}
+
+{% block title %}{% if post %}Editar Post{% else %}Novo Post{% endif %} - Sistema de Autenticação{% endblock %}
+
+{% block content %}
+<div class="card">
+    <h1>{% if post %}Editar Post{% else %}Novo Post{% endif %}</h1>
+
+    <form method="POST">
+        <div class="form-group">
+            <label for="titulo">Título <span class="required">*</span></label>
+            <input type="text" id="titulo" name="titulo" required value="{{ post.titulo if post else '' }}">
+        </div>
+
+        <div class="form-group">
+            <label for="conteudo">Conteúdo <span class="required">*</span></label>
+            <textarea id="conteudo" name="conteudo" required>{{ post.conteudo if post else '' }}</textarea>
+        </div>
+
+        <div class="form-actions">
+            <button type="submit" class="btn btn-success">Salvar</button>
+            <a href="{{ url_for('painel') }}" class="btn">Cancelar</a>
+        </div>
+    </form>
+</div>
+{% endblock %}

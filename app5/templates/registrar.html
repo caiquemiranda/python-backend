@@ -1,0 +1,39 @@
+{% extends 'base.html' %}
+
+{% block title %}Registro - Sistema de Autenticação{% endblock %}
+
+{% block content %}
+<div class="card">
+    <h1>Criar Nova Conta</h1>
+
+    <form method="POST">
+        <div class="form-group">
+            <label for="nome">Nome <span class="required">*</span></label>
+            <input type="text" id="nome" name="nome" required>
+        </div>
+
+        <div class="form-group">
+            <label for="email">E-mail <span class="required">*</span></label>
+            <input type="email" id="email" name="email" required>
+        </div>
+
+        <div class="form-group">
+            <label for="senha">Senha <span class="required">*</span></label>
+            <input type="password" id="senha" name="senha" required>
+        </div>
+
+        <div class="form-group">
+            <label for="confirmacao">Confirme a Senha <span class="required">*</span></label>
+            <input type="password" id="confirmacao" name="confirmacao" required>
+        </div>
+
+        <div class="form-actions">
+            <button type="submit" class="btn btn-success">Registrar</button>
+        </div>
+    </form>
+
+    <p style="margin-top: 1rem;">
+        Já tem uma conta? <a href="{{ url_for('login') }}">Faça login</a>
+    </p>
+</div>
+{% endblock %}
