@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gerenciador de Tarefas</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            margin: 0;
+            padding: 20px;
+            color: #333;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        h1 {
+            color: #2c3e50;
+            margin-bottom: 20px;
+        }
+
+        .flash-messages {
+            margin-bottom: 20px;
+        }
+
+        .flash-message {
+            padding: 10px 15px;
+            border-radius: 4px;
+            margin-bottom: 10px;
+        }
+
+        .flash-success {
+            background-color: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+
+        .flash-error {
+            background-color: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 8px 16px;
+            background-color: #3498db;
+            color: white;
+            text-decoration: none;
+            border-radius: 4px;
+            border: none;
+            cursor: pointer;
+            font-size: 14px;
+        }
+
+        .btn-add {
+            background-color: #2ecc71;
+            margin-bottom: 20px;
+        }
+
+        .btn-edit {
+            background-color: #f39c12;
+        }
+
+        .btn-delete {
+            background-color: #e74c3c;
+        }
+
+        .btn-toggle {
+            background-color: #9b59b6;
+        }
+
+        .tarefa {
+            border: 1px solid #ddd;
+            padding: 15px;
+            margin-bottom: 10px;
+            border-radius: 4px;
+            position: relative;
+        }
+
+        .concluida {
+            background-color: #f8f9fa;
+            border-left: 4px solid #2ecc71;
+        }
+
+        .concluida h3 {
+            text-decoration: line-through;
+            color: #7f8c8d;
+        }
+
+        .tarefa-titulo {
+            margin-top: 0;
+            margin-bottom: 10px;
+            color: #2c3e50;
+        }
+
+        .tarefa-descricao {
+            margin-bottom: 15px;
+            color: #555;
+        }
+
+        .tarefa-data {
+            font-size: 12px;
+            color: #7f8c8d;
+            margin-bottom: 10px;
+        }
+
+        .tarefa-acoes {
+            margin-top: 10px;
+        }
+
+        .no-tarefas {
+            text-align: center;
+            padding: 20px;
+            background-color: #f8f9fa;
+            border-radius: 4px;
+            color: #7f8c8d;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <h1>Gerenciador de Tarefas</h1>
+
+        <!-- Mensagens de feedback -->
+        <div class="flash-messages">
+            {% for category, message in get_flashed_messages(with_categories=true) %}
+            <div class="flash-message flash-{{ category }}">
+                {{ message }}
+            </div>
+            {% endfor %}
+        </div>
+
+        <a href="{{ url_for('nova_tarefa') }}" class="btn btn-add">+ Nova Tarefa</a>
+
+        <h2>Suas Tarefas</h2>
+
+        {% if tarefas %}
+        {% for tarefa in tarefas %}
+        <div class="tarefa {% if tarefa.concluida %}concluida{% endif %}">
+            <h3 class="tarefa-titulo">{{ tarefa.titulo }}</h3>
+            <div class="tarefa-descricao">{{ tarefa.descricao }}</div>
+            <div class="tarefa-data">Criada em: {{ tarefa.data_criacao }}</div>
+            <div class="tarefa-acoes">
+                <a href="{{ url_for('alternar_status', tarefa_id=tarefa.id) }}" class="btn btn-toggle">
+                    {% if tarefa.concluida %}Desmarcar{% else %}Concluir{% endif %}
+                </a>
+                <a href="{{ url_for('editar_tarefa', tarefa_id=tarefa.id) }}" class="btn btn-edit">Editar</a>
+                <a href="{{ url_for('excluir_tarefa', tarefa_id=tarefa.id) }}" class="btn btn-delete"
+                    onclick="return confirm('Tem certeza que deseja excluir esta tarefa?')">Excluir</a>
+            </div>
+        </div>
+        {% endfor %}
+        {% else %}
+        <div class="no-tarefas">
+            <p>Nenhuma tarefa encontrada. Comece criando uma nova tarefa!</p>
+        </div>
+        {% endif %}
+    </div>
+</body>
+
+</html>
