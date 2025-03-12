@@ -1,10 +1,6 @@
-#!/usr/bin/env python
-# -*- coding: utf-8 -*-
-
 """
-CRUD com arquivos locais (sem banco de dados)
-Este script implementa operações básicas de CRUD (Create, Read, Update, Delete)
-utilizando arquivos JSON para armazenamento de dados.
+CRUD com JSON
+Este script implementa operações básicas de CRUD.
 """
 
 import json
@@ -16,39 +12,36 @@ from http import HTTPStatus
 from datetime import datetime
 import uuid
 
-# Porta na qual o servidor irá escutar
 PORT = 8000
 
-# Diretório para armazenar os arquivos de dados
 DATA_DIR = 'dados'
 
-# Arquivo para armazenar os dados
 TAREFAS_FILE = os.path.join(DATA_DIR, 'tarefas.json')
 
-# Garantir que o diretório de dados existe
 os.makedirs(DATA_DIR, exist_ok=True)
 
-# Inicializa o arquivo de tarefas se não existir
 if not os.path.exists(TAREFAS_FILE):
     with open(TAREFAS_FILE, 'w', encoding='utf-8') as f:
         json.dump([], f)
 
 def carregar_tarefas():
     """Carrega todas as tarefas do arquivo JSON."""
+
     try:
         with open(TAREFAS_FILE, 'r', encoding='utf-8') as f:
             return json.load(f)
     except (json.JSONDecodeError, FileNotFoundError):
-        # Se o arquivo estiver vazio ou com formato inválido, retorna lista vazia
         return []
 
 def salvar_tarefas(tarefas):
     """Salva a lista de tarefas no arquivo JSON."""
+
     with open(TAREFAS_FILE, 'w', encoding='utf-8') as f:
         json.dump(tarefas, f, ensure_ascii=False, indent=2)
 
 def criar_tarefa(titulo, descricao):
     """Cria uma nova tarefa e adiciona ao arquivo."""
+
     tarefas = carregar_tarefas()
     
     nova_tarefa = {
@@ -65,6 +58,7 @@ def criar_tarefa(titulo, descricao):
 
 def ler_tarefa(tarefa_id):
     """Busca uma tarefa pelo ID."""
+
     tarefas = carregar_tarefas()
     for tarefa in tarefas:
         if tarefa['id'] == tarefa_id:
@@ -73,6 +67,7 @@ def ler_tarefa(tarefa_id):
 
 def atualizar_tarefa(tarefa_id, titulo=None, descricao=None, concluida=None):
     """Atualiza uma tarefa existente pelo ID."""
+
     tarefas = carregar_tarefas()
     
     for i, tarefa in enumerate(tarefas):
@@ -84,7 +79,6 @@ def atualizar_tarefa(tarefa_id, titulo=None, descricao=None, concluida=None):
             if concluida is not None:
                 tarefas[i]['concluida'] = concluida
             
-            # Adiciona data de atualização
             tarefas[i]['atualizada_em'] = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
             
             salvar_tarefas(tarefas)
@@ -94,6 +88,7 @@ def atualizar_tarefa(tarefa_id, titulo=None, descricao=None, concluida=None):
 
 def deletar_tarefa(tarefa_id):
     """Remove uma tarefa pelo ID."""
+
     tarefas = carregar_tarefas()
     
     for i, tarefa in enumerate(tarefas):
@@ -107,11 +102,10 @@ def deletar_tarefa(tarefa_id):
 class CRUDHandler(http.server.SimpleHTTPRequestHandler):
     def do_GET(self):
         """Implementa o método GET para listar ou obter tarefas."""
-        # Obter ID da tarefa a partir da query string, se existir
+
         parsed_url = urllib.parse.urlparse(self.path)
         query_params = urllib.parse.parse_qs(parsed_url.query)
         
-        # Rota para a página inicial
         if parsed_url.path == '/':
             self.send_response(HTTPStatus.OK)
             self.send_header('Content-type', 'text/html; charset=utf-8')
@@ -119,7 +113,6 @@ class CRUDHandler(http.server.SimpleHTTPRequestHandler):
             
             self.wfile.write(self._render_index_page().encode('utf-8'))
             
-        # Rota para listar todas as tarefas
         elif parsed_url.path == '/api/tarefas':
             tarefas = carregar_tarefas()
             
@@ -129,7 +122,6 @@ class CRUDHandler(http.server.SimpleHTTPRequestHandler):
             
             self.wfile.write(json.dumps(tarefas, ensure_ascii=False).encode('utf-8'))
             
-        # Rota para obter uma tarefa específica
         elif parsed_url.path.startswith('/api/tarefas/') and len(parsed_url.path.split('/')) == 4:
             tarefa_id = parsed_url.path.split('/')[3]
             tarefa = ler_tarefa(tarefa_id)
@@ -147,7 +139,6 @@ class CRUDHandler(http.server.SimpleHTTPRequestHandler):
                 
                 self.wfile.write(json.dumps({"erro": "Tarefa não encontrada"}, ensure_ascii=False).encode('utf-8'))
         
-        # Rota para visualizar o formulário de nova tarefa
         elif parsed_url.path == '/nova-tarefa':
             self.send_response(HTTPStatus.OK)
             self.send_header('Content-type', 'text/html; charset=utf-8')
@@ -155,7 +146,6 @@ class CRUDHandler(http.server.SimpleHTTPRequestHandler):
             
             self.wfile.write(self._render_form_page().encode('utf-8'))
         
-        # Rota não encontrada
         else:
             self.send_response(HTTPStatus.NOT_FOUND)
             self.send_header('Content-type', 'text/html; charset=utf-8')
@@ -165,14 +155,13 @@ class CRUDHandler(http.server.SimpleHTTPRequestHandler):
     
     def do_POST(self):
         """Implementa o método POST para criar tarefas."""
+
         parsed_url = urllib.parse.urlparse(self.path)
         
-        # Rota para criar uma nova tarefa
         if parsed_url.path == '/api/tarefas':
             content_length = int(self.headers['Content-Length'])
             post_data = self.rfile.read(content_length).decode('utf-8')
             
-            # Processar dados do formulário ou JSON
             if self.headers['Content-Type'] == 'application/x-www-form-urlencoded':
                 data = urllib.parse.parse_qs(post_data)
                 titulo = data.get('titulo', [''])[0]
@@ -190,7 +179,6 @@ class CRUDHandler(http.server.SimpleHTTPRequestHandler):
                     self.wfile.write(json.dumps({"erro": "Dados inválidos"}, ensure_ascii=False).encode('utf-8'))
                     return
             
-            # Validação básica
             if not titulo:
                 self.send_response(HTTPStatus.BAD_REQUEST)
                 self.send_header('Content-type', 'application/json; charset=utf-8')
@@ -199,10 +187,8 @@ class CRUDHandler(http.server.SimpleHTTPRequestHandler):
                 self.wfile.write(json.dumps({"erro": "Título é obrigatório"}, ensure_ascii=False).encode('utf-8'))
                 return
             
-            # Criar nova tarefa
             tarefa = criar_tarefa(titulo, descricao)
             
-            # Cabeçalho de resposta e corpo
             self.send_response(HTTPStatus.CREATED)
             self.send_header('Content-type', 'application/json; charset=utf-8')
             self.end_headers()
@@ -220,11 +206,9 @@ class CRUDHandler(http.server.SimpleHTTPRequestHandler):
         """Implementa o método PUT para atualizar tarefas."""
         parsed_url = urllib.parse.urlparse(self.path)
         
-        # Verificar se a URL corresponde a uma tarefa específica
         if parsed_url.path.startswith('/api/tarefas/') and len(parsed_url.path.split('/')) == 4:
             tarefa_id = parsed_url.path.split('/')[3]
             
-            # Ler o corpo da requisição
             content_length = int(self.headers['Content-Length'])
             put_data = self.rfile.read(content_length).decode('utf-8')
             
@@ -238,7 +222,6 @@ class CRUDHandler(http.server.SimpleHTTPRequestHandler):
                 self.wfile.write(json.dumps({"erro": "Dados inválidos"}, ensure_ascii=False).encode('utf-8'))
                 return
             
-            # Atualizar a tarefa
             tarefa = atualizar_tarefa(
                 tarefa_id,
                 titulo=data.get('titulo'),
@@ -267,13 +250,12 @@ class CRUDHandler(http.server.SimpleHTTPRequestHandler):
     
     def do_DELETE(self):
         """Implementa o método DELETE para remover tarefas."""
+
         parsed_url = urllib.parse.urlparse(self.path)
         
-        # Verificar se a URL corresponde a uma tarefa específica
         if parsed_url.path.startswith('/api/tarefas/') and len(parsed_url.path.split('/')) == 4:
             tarefa_id = parsed_url.path.split('/')[3]
             
-            # Excluir a tarefa
             tarefa = deletar_tarefa(tarefa_id)
             
             if tarefa:
@@ -297,9 +279,9 @@ class CRUDHandler(http.server.SimpleHTTPRequestHandler):
     
     def _render_index_page(self):
         """Renderiza a página inicial."""
+
         tarefas = carregar_tarefas()
         
-        # HTML da página inicial
         html = """
         <!DOCTYPE html>
         <html>
@@ -377,13 +359,11 @@ class CRUDHandler(http.server.SimpleHTTPRequestHandler):
                 <h2>Suas Tarefas</h2>
         """
         
-        # Se não há tarefas, mostra mensagem
         if not tarefas:
             html += """
                 <p>Nenhuma tarefa encontrada. Comece criando uma nova tarefa!</p>
             """
         else:
-            # Lista todas as tarefas
             for tarefa in tarefas:
                 task_class = "task completed" if tarefa.get('concluida') else "task"
                 html += f"""
@@ -400,7 +380,6 @@ class CRUDHandler(http.server.SimpleHTTPRequestHandler):
                 </div>
                 """
         
-        # Adiciona JavaScript para interação com a API
         html += """
                 <script>
                     // Função para marcar/desmarcar tarefa como concluída
@@ -641,13 +620,12 @@ class CRUDHandler(http.server.SimpleHTTPRequestHandler):
 
 def iniciar_servidor():
     """Inicia o servidor HTTP na porta definida."""
-    # Configura o servidor HTTP
+
     with socketserver.TCPServer(("", PORT), CRUDHandler) as httpd:
         print(f"Servidor rodando na porta {PORT}")
         print(f"Gerenciador de Tarefas disponível em: http://localhost:{PORT}")
         print("Pressione Ctrl+C para encerrar.")
         
-        # Mantém o servidor rodando até ser interrompido
         try:
             httpd.serve_forever()
         except KeyboardInterrupt:
