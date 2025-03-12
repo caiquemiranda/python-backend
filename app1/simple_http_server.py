@@ -1,28 +1,23 @@
-#!/usr/bin/env python
-# -*- coding: utf-8 -*-
-
 """
-Servidor HTTP básico com Python puro (sem frameworks)
-Este script cria um servidor HTTP simples que responde a requisições GET.
+Servidor HTTP básico com Python (sem frameworks)
+HTTP simples que responde a requisições GET.
 """
 
 import http.server
 import socketserver
 
-# Porta na qual o servidor irá escutar
+# servidor irá escutar
 PORT = 8000
 
-# Handler para processar as requisições HTTP
+# Handler requisições HTTP
 class MeuHandler(http.server.SimpleHTTPRequestHandler):
     def do_GET(self):
-        """Implementa o método GET para o servidor HTTP."""
+        
         if self.path == '/':
-            # Define o status da resposta e cabeçalhos
             self.send_response(200)
             self.send_header('Content-type', 'text/html; charset=utf-8')
             self.end_headers()
             
-            # Conteúdo da página
             conteudo = """
             <!DOCTYPE html>
             <html>
@@ -52,7 +47,6 @@ class MeuHandler(http.server.SimpleHTTPRequestHandler):
             </html>
             """
             
-            # Envia a resposta para o cliente
             self.wfile.write(conteudo.encode('utf-8'))
             
         elif self.path == '/info':
@@ -122,7 +116,7 @@ class MeuHandler(http.server.SimpleHTTPRequestHandler):
             self.wfile.write(conteudo.encode('utf-8'))
             
         else:
-            # Quando o caminho não é reconhecido, retorna 404
+            # 404
             self.send_response(404)
             self.send_header('Content-type', 'text/html; charset=utf-8')
             self.end_headers()
@@ -156,13 +150,12 @@ class MeuHandler(http.server.SimpleHTTPRequestHandler):
 
 def iniciar_servidor():
     """Inicia o servidor HTTP na porta definida."""
-    # Cria um socket TCP que escutará na porta PORT
+    
     with socketserver.TCPServer(("", PORT), MeuHandler) as httpd:
         print(f"Servidor rodando na porta {PORT}")
         print(f"Acesse: http://localhost:{PORT}")
         print("Pressione Ctrl+C para encerrar.")
         
-        # Mantém o servidor rodando até ser interrompido
         try:
             httpd.serve_forever()
         except KeyboardInterrupt:
