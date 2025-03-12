@@ -1,0 +1,74 @@
+{% extends 'base.html' %}
+
+{% block title %}Lista de Arquivos - Sistema de Upload{% endblock %}
+
+{% block content %}
+<div class="card">
+    <h1>Arquivos Disponíveis</h1>
+
+    <a href="{{ url_for('upload_arquivo') }}" class="btn btn-success" style="margin-bottom: 1.5rem;">
+        + Fazer Upload de Arquivo
+    </a>
+
+    {% if arquivos %}
+    <div style="overflow-x: auto;">
+        <table style="width: 100%; border-collapse: collapse;">
+            <thead>
+                <tr style="background-color: #f2f2f2; text-align: left;">
+                    <th style="padding: 0.75rem;">Nome</th>
+                    <th style="padding: 0.75rem;">Tipo</th>
+                    <th style="padding: 0.75rem;">Tamanho</th>
+                    <th style="padding: 0.75rem;">Data de Upload</th>
+                    <th style="padding: 0.75rem;">Ações</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for arquivo in arquivos %}
+                <tr style="border-bottom: 1px solid #eee;">
+                    <td style="padding: 0.75rem;">
+                        <a href="{{ url_for('detalhes_arquivo', arquivo_id=arquivo.id) }}" class="file-name">
+                            {{ arquivo.nome_original }}
+                        </a>
+                    </td>
+                    <td style="padding: 0.75rem;">
+                        {{ arquivo.tipo_arquivo.split('/')[-1] if arquivo.tipo_arquivo else 'Desconhecido' }}
+                    </td>
+                    <td style="padding: 0.75rem;">
+                        {{ formatar_tamanho(arquivo.tamanho) }}
+                    </td>
+                    <td style="padding: 0.75rem;">
+                        {{ arquivo.data_upload }}
+                    </td>
+                    <td style="padding: 0.75rem;">
+                        <div class="file-actions">
+                            <a href="{{ url_for('download_arquivo', arquivo_id=arquivo.id) }}" class="btn btn-primary">
+                                Download
+                            </a>
+                            <a href="{{ url_for('detalhes_arquivo', arquivo_id=arquivo.id) }}" class="btn">
+                                Detalhes
+                            </a>
+                        </div>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    {% else %}
+    <div style="text-align: center; padding: 2rem; background-color: #f8f9fa; border-radius: 0.25rem;">
+        <p>Nenhum arquivo disponível.</p>
+        <p>Comece fazendo <a href="{{ url_for('upload_arquivo') }}">upload de um arquivo</a>.</p>
+    </div>
+    {% endif %}
+</div>
+
+<div class="card">
+    <h2>Sobre o Sistema de Upload</h2>
+    <p>Este sistema permite fazer upload e gerenciar arquivos no servidor:</p>
+    <ul>
+        <li>Faça upload de arquivos com até 16 MB</li>
+        <li>Formatos suportados: txt, pdf, png, jpg, jpeg, gif, doc, docx, xls, xlsx, zip</li>
+        <li>Baixe, visualize detalhes e gerencie os arquivos enviados</li>
+    </ul>
+</div>
+{% endblock %}

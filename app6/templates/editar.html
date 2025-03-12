@@ -1,0 +1,30 @@
+{% extends 'base.html' %}
+
+{% block title %}Editar Arquivo - Sistema de Upload{% endblock %}
+
+{% block content %}
+<div class="card">
+    <h1>Editar Informações do Arquivo</h1>
+
+    <div style="margin-bottom: 1.5rem;">
+        <a href="{{ url_for('detalhes_arquivo', arquivo_id=arquivo.id) }}" class="btn">&larr; Voltar para Detalhes</a>
+    </div>
+
+    <div style="background-color: #f8f9fa; padding: 1rem; border-radius: 0.25rem; margin-bottom: 1.5rem;">
+        <p><strong>Nome do arquivo:</strong> {{ arquivo.nome_original }}</p>
+    </div>
+
+    <form method="POST">
+        <div class="form-group">
+            <label for="descricao">Descrição</label>
+            <textarea id="descricao" name="descricao"
+                placeholder="Digite uma descrição ou informações sobre o arquivo...">{{ arquivo.descricao }}</textarea>
+        </div>
+
+        <div style="margin-top: 1.5rem;">
+            <button type="submit" class="btn btn-success">Salvar Alterações</button>
+            <a href="{{ url_for('detalhes_arquivo', arquivo_id=arquivo.id) }}" class="btn">Cancelar</a>
+        </div>
+    </form>
+</div>
+{% endblock %}

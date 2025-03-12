@@ -1,0 +1,60 @@
+{% extends 'base.html' %}
+
+{% block title %}Detalhes do Arquivo - Sistema de Upload{% endblock %}
+
+{% block content %}
+<div class="card">
+    <h1>Detalhes do Arquivo</h1>
+
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
+        <div>
+            <a href="{{ url_for('listar_arquivos') }}" class="btn">&larr; Voltar para a Lista</a>
+        </div>
+        <div>
+            <a href="{{ url_for('download_arquivo', arquivo_id=arquivo.id) }}" class="btn btn-primary">Download</a>
+            <a href="{{ url_for('editar_arquivo', arquivo_id=arquivo.id) }}" class="btn btn-success">Editar</a>
+            <form method="POST" action="{{ url_for('excluir_arquivo', arquivo_id=arquivo.id) }}"
+                style="display: inline;" onsubmit="return confirm('Tem certeza que deseja excluir este arquivo?');">
+                <button type="submit" class="btn btn-danger">Excluir</button>
+            </form>
+        </div>
+    </div>
+
+    <div style="background-color: #f8f9fa; padding: 1.5rem; border-radius: 0.25rem; margin-bottom: 1.5rem;">
+        <h2 style="margin-top: 0; color: #2c3e50;">{{ arquivo.nome_original }}</h2>
+
+        <div style="display: grid; grid-template-columns: 1fr 2fr; gap: 1rem; margin-top: 1rem;">
+            <div style="font-weight: bold;">Tipo de Arquivo:</div>
+            <div>{{ arquivo.tipo_arquivo }}</div>
+
+            <div style="font-weight: bold;">Tamanho:</div>
+            <div>{{ formatar_tamanho(arquivo.tamanho) }}</div>
+
+            <div style="font-weight: bold;">Data de Upload:</div>
+            <div>{{ arquivo.data_upload }}</div>
+
+            <div style="font-weight: bold;">ID:</div>
+            <div>{{ arquivo.id }}</div>
+        </div>
+    </div>
+
+    <div>
+        <h3>Descrição</h3>
+        <div style="background-color: white; padding: 1rem; border: 1px solid #eee; border-radius: 0.25rem;">
+            {% if arquivo.descricao %}
+            <p style="white-space: pre-line;">{{ arquivo.descricao }}</p>
+            {% else %}
+            <p style="color: #777; font-style: italic;">Nenhuma descrição fornecida.</p>
+            {% endif %}
+        </div>
+    </div>
+
+    {% if arquivo.tipo_arquivo and arquivo.tipo_arquivo.startswith('image/') %}
+    <div style="margin-top: 2rem;">
+        <h3>Pré-visualização</h3>
+        <img src="{{ url_for('download_arquivo', arquivo_id=arquivo.id) }}" alt="{{ arquivo.nome_original }}"
+            class="image-preview">
+    </div>
+    {% endif %}
+</div>
+{% endblock %}
