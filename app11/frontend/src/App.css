@@ -1,0 +1,36 @@
+.App {
+  text-align: center;
+  font-family: Arial, sans-serif;
+}
+
+.App-header {
+  background-color: #282c34;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  color: white;
+}
+
+.card {
+  background-color: #ffffff;
+  color: #333333;
+  border-radius: 8px;
+  padding: 20px;
+  width: 80%;
+  max-width: 500px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  margin-top: 20px;
+}
+
+.mensagem {
+  font-size: 1.2rem;
+  color: #4caf50;
+  font-weight: bold;
+}
+
+.erro {
+  color: #f44336;
+  font-weight: bold;
+} 
