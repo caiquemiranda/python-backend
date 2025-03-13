@@ -19,27 +19,33 @@ frontend/
   │   ├── index.html
   │   └── ...
   ├── src/
-  │   ├── components/       # Componentes reutilizáveis
-  │   │   ├── Navbar.js     # Barra de navegação
+  │   ├── components/           # Componentes reutilizáveis
+  │   │   ├── Navbar.js         # Barra de navegação
   │   │   ├── Navbar.css
-  │   │   └── PrivateRoute.js # Proteção de rotas privadas
+  │   │   ├── Footer.js         # Rodapé da aplicação
+  │   │   ├── Footer.css
+  │   │   └── PrivateRoute.js   # Proteção de rotas privadas
   │   ├── context/
-  │   │   └── AuthContext.js  # Contexto de autenticação
-  │   ├── pages/            # Páginas da aplicação
-  │   │   ├── Home.js         # Página inicial
+  │   │   └── AuthContext.js    # Contexto de autenticação
+  │   ├── pages/                # Páginas da aplicação
+  │   │   ├── Home.js           # Página inicial
   │   │   ├── Home.css
-  │   │   ├── Login.js        # Página de login
-  │   │   ├── Register.js     # Página de registro
-  │   │   ├── NotesList.js    # Lista de notas do usuário
-  │   │   ├── NoteDetail.js   # Detalhes de uma nota
-  │   │   ├── NoteForm.js     # Form para criar/editar notas
+  │   │   ├── Login.js          # Página de login
+  │   │   ├── Register.js       # Página de registro
+  │   │   ├── NotesList.js      # Lista de notas do usuário
+  │   │   ├── NoteDetail.js     # Detalhes de uma nota
+  │   │   ├── NoteForm.js       # Form para criar/editar notas
+  │   │   ├── About.js          # Página sobre o aplicativo
+  │   │   ├── About.css
+  │   │   ├── NotFound.js       # Página de erro 404
+  │   │   ├── NotFound.css
   │   │   ├── Notes.css
   │   │   └── AuthForms.css
   │   ├── services/
-  │   │   └── api.js        # Serviços para comunicação com a API
-  │   ├── App.js            # Componente principal com rotas
-  │   ├── App.css           # Estilos globais
-  │   └── index.js          # Ponto de entrada
+  │   │   └── api.js            # Serviços para comunicação com a API
+  │   ├── App.js                # Componente principal com rotas
+  │   ├── App.css               # Estilos globais
+  │   └── index.js              # Ponto de entrada
   ├── package.json
   └── README.md
 ```
@@ -59,8 +65,12 @@ frontend/
   - Excluir notas
   - Definir notas como públicas ou privadas
 
-- **Outros**:
-  - Visualização de notas públicas na página inicial
+- **Interface**:
+  - Barra de navegação responsiva 
+  - Rodapé com informações da aplicação
+  - Página inicial com exibição de notas públicas
+  - Página "Sobre" com informações do aplicativo
+  - Página de erro 404 personalizada
   - Interface responsiva para diferentes tamanhos de tela
   - Mensagens de feedback usando toasts
 
@@ -81,6 +91,20 @@ frontend/
 
 A comunicação com o backend é feita através de requisições HTTP utilizando o Axios. O token JWT é automaticamente incluído nos cabeçalhos das requisições quando o usuário está autenticado.
 
-## Interface
+## Design da Interface
 
-A interface segue um design minimalista e responsivo, com foco na usabilidade. Utiliza uma paleta de cores baseada em roxo (#6200ea) como cor principal, com elementos de feedback visuais claros para ações do usuário. 
+A interface segue um design minimalista e responsivo, com foco na usabilidade. Utiliza uma paleta de cores baseada em roxo (#6200ea) como cor principal, com elementos de feedback visuais claros para ações do usuário.
+
+- **Componentes principais**:
+  - Navbar: Barra de navegação superior com links adaptados ao estado de autenticação
+  - Footer: Rodapé com informações e links úteis
+  - Formulários: Designs consistentes com validação e feedback
+  - Cards: Utilizados para exibir notas e recursos
+  - Botões: Estilizados de acordo com suas ações (primária, secundária, perigo)
+
+- **Recursos de UI/UX**:
+  - Mensagens de feedback para ações do usuário via toasts
+  - Indicadores de carregamento
+  - Confirmações para ações destrutivas
+  - Páginas de erro customizadas
+  - Animações sutis para melhorar a experiência do usuário 

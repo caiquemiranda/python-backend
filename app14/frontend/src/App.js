@@ -8,6 +8,7 @@ import { AuthProvider } from './context/AuthContext';
 
 // Componentes
 import Navbar from './components/Navbar';
+import Footer from './components/Footer';
 import PrivateRoute from './components/PrivateRoute';
 
 // Páginas
@@ -17,6 +18,8 @@ import Register from './pages/Register';
 import NotesList from './pages/NotesList';
 import NoteDetail from './pages/NoteDetail';
 import NoteForm from './pages/NoteForm';
+import About from './pages/About';
+import NotFound from './pages/NotFound';
 
 // Estilos globais
 import './App.css';
@@ -33,6 +36,7 @@ function App() {
                             <Route path="/" element={<Home />} />
                             <Route path="/login" element={<Login />} />
                             <Route path="/register" element={<Register />} />
+                            <Route path="/about" element={<About />} />
 
                             {/* Rotas protegidas */}
                             <Route element={<PrivateRoute />}>
@@ -41,8 +45,13 @@ function App() {
                                 <Route path="/notes/:id" element={<NoteDetail />} />
                                 <Route path="/notes/:id/edit" element={<NoteForm />} />
                             </Route>
+
+                            {/* Rota para página não encontrada (404) */}
+                            <Route path="*" element={<NotFound />} />
                         </Routes>
                     </main>
+
+                    <Footer />
 
                     {/* Configuração do Toast para mensagens de feedback */}
                     <ToastContainer

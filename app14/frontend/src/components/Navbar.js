@@ -1,7 +1,7 @@
 import React from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
-import { FaUser, FaSignOutAlt, FaHome, FaLock, FaUserPlus, FaStickyNote } from 'react-icons/fa';
+import { FaUser, FaSignOutAlt, FaHome, FaLock, FaUserPlus, FaStickyNote, FaInfoCircle } from 'react-icons/fa';
 import './Navbar.css';
 
 const Navbar = () => {
@@ -25,6 +25,10 @@ const Navbar = () => {
                 <div className="nav-links">
                     <Link to="/" className="nav-link">
                         <FaHome /> Início
+                    </Link>
+
+                    <Link to="/about" className="nav-link">
+                        <FaInfoCircle /> Sobre
                     </Link>
 
                     {isAuthenticated ? (

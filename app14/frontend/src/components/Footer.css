@@ -1,0 +1,128 @@
+.footer {
+    background-color: #303030;
+    color: #f5f5f5;
+    padding: 3rem 0 1.5rem;
+    margin-top: 4rem;
+}
+
+.footer-content {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 2rem;
+    margin-bottom: 2.5rem;
+}
+
+.footer-title {
+    font-size: 1.3rem;
+    margin-bottom: 1rem;
+    color: #fff;
+    position: relative;
+    padding-bottom: 0.5rem;
+}
+
+.footer-title::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    height: 2px;
+    width: 50px;
+    background-color: #6200ea;
+}
+
+.footer-description {
+    line-height: 1.6;
+    color: #ccc;
+}
+
+.footer-links,
+.footer-tech {
+    list-style: none;
+    padding: 0;
+}
+
+.footer-links li,
+.footer-tech li {
+    margin-bottom: 0.8rem;
+}
+
+.footer-link {
+    color: #ccc;
+    text-decoration: none;
+    transition: color 0.2s;
+    display: inline-flex;
+    align-items: center;
+}
+
+.footer-link:hover {
+    color: #6200ea;
+}
+
+.footer-tech li {
+    color: #ccc;
+    position: relative;
+    padding-left: 1rem;
+}
+
+.footer-tech li::before {
+    content: '•';
+    color: #6200ea;
+    position: absolute;
+    left: 0;
+    top: 0;
+}
+
+.footer-bottom {
+    padding-top: 1.5rem;
+    border-top: 1px solid #444;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 1rem;
+}
+
+.copyright {
+    font-size: 0.9rem;
+    color: #aaa;
+}
+
+.footer-icons {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+}
+
+.footer-icon {
+    color: #ccc;
+    font-size: 1.5rem;
+    transition: color 0.2s;
+}
+
+.footer-icon:hover {
+    color: #6200ea;
+}
+
+.footer-made-with {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    color: #aaa;
+    font-size: 0.9rem;
+}
+
+.heart-icon {
+    color: #ff5252;
+}
+
+@media (max-width: 768px) {
+    .footer-bottom {
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+    }
+
+    .footer-icons {
+        margin-top: 1rem;
+    }
+}
