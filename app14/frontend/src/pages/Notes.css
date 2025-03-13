@@ -1,0 +1,449 @@
+/* Estilos para a listagem de notas */
+.notes-container {
+    max-width: 1000px;
+    margin: 0 auto;
+    padding: 2rem 1rem;
+}
+
+.notes-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 2rem;
+}
+
+.notes-header h1 {
+    color: #333;
+    font-size: 2rem;
+}
+
+.add-note-btn {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    background-color: #6200ea;
+    color: white;
+    padding: 0.7rem 1.2rem;
+    border-radius: 4px;
+    text-decoration: none;
+    font-weight: 500;
+    transition: background-color 0.2s;
+}
+
+.add-note-btn:hover {
+    background-color: #5000d3;
+}
+
+/* Estilo para mensagem de erro */
+.error-container {
+    text-align: center;
+    padding: 2rem;
+    background-color: #fee;
+    border-radius: 8px;
+    color: #d32f2f;
+    margin: 2rem 0;
+}
+
+.retry-btn {
+    margin-top: 1rem;
+    padding: 0.7rem 1.5rem;
+    background-color: #d32f2f;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+.retry-btn:hover {
+    background-color: #b71c1c;
+}
+
+/* Estilo para notas vazias */
+.empty-notes {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 3rem 1rem;
+    background-color: #f5f5f5;
+    border-radius: 8px;
+}
+
+.empty-icon {
+    font-size: 5rem;
+    color: #aaa;
+    margin-bottom: 1.5rem;
+}
+
+.empty-notes h2 {
+    font-size: 1.8rem;
+    color: #555;
+    margin-bottom: 1rem;
+}
+
+.empty-notes p {
+    color: #777;
+    margin-bottom: 2rem;
+}
+
+.create-first-note-btn {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    background-color: #6200ea;
+    color: white;
+    padding: 0.8rem 1.5rem;
+    border-radius: 4px;
+    text-decoration: none;
+    font-weight: 500;
+    transition: background-color 0.2s;
+}
+
+.create-first-note-btn:hover {
+    background-color: #5000d3;
+}
+
+/* Lista de notas */
+.notes-list {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 1.5rem;
+}
+
+.note-item {
+    background-color: white;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.note-item:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.note-item-header {
+    padding: 1.2rem 1.5rem;
+    background-color: #f0e7fe;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+}
+
+.note-item-title {
+    font-size: 1.3rem;
+    color: #333;
+    margin: 0;
+    word-break: break-word;
+    flex: 1;
+    padding-right: 0.5rem;
+}
+
+.note-item-visibility {
+    display: flex;
+    align-items: center;
+    margin-left: auto;
+}
+
+.public-badge,
+.private-badge {
+    display: flex;
+    align-items: center;
+    gap: 0.3rem;
+    padding: 0.3rem 0.6rem;
+    border-radius: 4px;
+    font-size: 0.8rem;
+    font-weight: 500;
+    white-space: nowrap;
+}
+
+.public-badge {
+    background-color: #4caf50;
+    color: white;
+}
+
+.private-badge {
+    background-color: #f44336;
+    color: white;
+}
+
+.note-item-preview {
+    padding: 1.5rem;
+    color: #555;
+    flex-grow: 1;
+    line-height: 1.5;
+    white-space: pre-line;
+    overflow: hidden;
+}
+
+.note-item-footer {
+    padding: 1rem 1.5rem;
+    background-color: #f8f8f8;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-top: 1px solid #eee;
+}
+
+.note-item-date {
+    font-size: 0.85rem;
+    color: #777;
+}
+
+.note-item-actions {
+    display: flex;
+    gap: 0.8rem;
+}
+
+.view-btn,
+.edit-btn,
+.delete-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    transition: background-color 0.2s, transform 0.2s;
+    cursor: pointer;
+}
+
+.view-btn {
+    color: #2196f3;
+    background-color: rgba(33, 150, 243, 0.1);
+    text-decoration: none;
+}
+
+.view-btn:hover {
+    background-color: rgba(33, 150, 243, 0.2);
+    transform: scale(1.1);
+}
+
+.edit-btn {
+    color: #4caf50;
+    background-color: rgba(76, 175, 80, 0.1);
+    text-decoration: none;
+}
+
+.edit-btn:hover {
+    background-color: rgba(76, 175, 80, 0.2);
+    transform: scale(1.1);
+}
+
+.delete-btn {
+    color: #f44336;
+    background-color: rgba(244, 67, 54, 0.1);
+    border: none;
+}
+
+.delete-btn:hover {
+    background-color: rgba(244, 67, 54, 0.2);
+    transform: scale(1.1);
+}
+
+/* Página de detalhes da nota */
+.note-details-container {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 2rem 1rem;
+}
+
+.note-details-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1.5rem;
+}
+
+.back-link {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    color: #6200ea;
+    text-decoration: none;
+    font-weight: 500;
+}
+
+.back-link:hover {
+    text-decoration: underline;
+}
+
+.note-details-actions {
+    display: flex;
+    gap: 1rem;
+}
+
+.note-details-content {
+    background-color: white;
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+}
+
+.note-details-title-section {
+    padding: 1.5rem;
+    background-color: #f0e7fe;
+    border-bottom: 1px solid #e0d3fc;
+}
+
+.note-details-title {
+    font-size: 1.8rem;
+    color: #333;
+    margin-bottom: 0.5rem;
+}
+
+.note-details-meta {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    font-size: 0.9rem;
+    color: #666;
+}
+
+.note-details-dates {
+    display: flex;
+    gap: 1.5rem;
+}
+
+.note-details-body {
+    padding: 2rem;
+    white-space: pre-line;
+    line-height: 1.6;
+}
+
+/* Estilo para o formulário de nota */
+.note-form-container {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 2rem 1rem;
+}
+
+.note-form-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1.5rem;
+}
+
+.note-form {
+    background-color: white;
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    padding: 2rem;
+}
+
+.form-group {
+    margin-bottom: 1.5rem;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 0.5rem;
+    font-weight: 500;
+    color: #333;
+}
+
+.form-group input,
+.form-group textarea {
+    width: 100%;
+    padding: 0.8rem;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 1rem;
+    font-family: 'Roboto', sans-serif;
+}
+
+.form-group textarea {
+    min-height: 200px;
+    resize: vertical;
+}
+
+.form-group input:focus,
+.form-group textarea:focus {
+    border-color: #6200ea;
+    outline: none;
+}
+
+.form-checkbox {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-bottom: 1.5rem;
+}
+
+.form-checkbox label {
+    cursor: pointer;
+    font-weight: normal;
+}
+
+.form-buttons {
+    display: flex;
+    justify-content: flex-end;
+    gap: 1rem;
+}
+
+.save-btn,
+.cancel-btn {
+    padding: 0.8rem 1.5rem;
+    border-radius: 4px;
+    font-weight: 500;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.save-btn {
+    background-color: #6200ea;
+    color: white;
+    border: none;
+}
+
+.save-btn:hover {
+    background-color: #5000d3;
+}
+
+.cancel-btn {
+    background-color: transparent;
+    color: #666;
+    border: 1px solid #ddd;
+    text-decoration: none;
+}
+
+.cancel-btn:hover {
+    background-color: #f5f5f5;
+}
+
+/* Responsividade */
+@media (max-width: 768px) {
+    .notes-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 1rem;
+    }
+
+    .note-details-header,
+    .note-form-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 1rem;
+    }
+
+    .note-details-actions {
+        width: 100%;
+        justify-content: space-between;
+    }
+
+    .note-details-meta {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0.5rem;
+    }
+}
