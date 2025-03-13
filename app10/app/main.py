@@ -1,11 +1,3 @@
-#!/usr/bin/env python
-# -*- coding: utf-8 -*-
-
-"""
-Aplicação Principal
-Este é o ponto de entrada principal para a API FastAPI com autenticação e banco de dados.
-"""
-
 import logging
 from pathlib import Path
 
