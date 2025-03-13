@@ -1,11 +1,3 @@
-#!/usr/bin/env python
-# -*- coding: utf-8 -*-
-
-"""
-Modelo de Produto
-Este módulo define o modelo de dados para produtos.
-"""
-
 import uuid
 from datetime import datetime
 
@@ -63,3 +55,4 @@ class Product:
             'created_at': self.created_at.isoformat(),
             'updated_at': self.updated_at.isoformat()
         } 
+        

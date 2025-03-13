@@ -1,12 +1,3 @@
-#!/usr/bin/env python
-# -*- coding: utf-8 -*-
-
-"""
-Utilitários de Validação
-Este módulo contém funções para validação de dados da API.
-"""
-
-
 def validate_product(data):
     """
     Valida os dados de um produto.

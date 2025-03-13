@@ -1,11 +1,3 @@
-#!/usr/bin/env python
-# -*- coding: utf-8 -*-
-
-"""
-Repositório de Dados
-Este módulo implementa um repositório em memória para armazenar e gerenciar produtos.
-"""
-
 from app.models.product import Product
 
 

@@ -1,11 +1,3 @@
-#!/usr/bin/env python
-# -*- coding: utf-8 -*-
-
-"""
-Utilidades para Respostas da API
-Este módulo contém funções para padronizar as respostas da API.
-"""
-
 from flask import jsonify
 
 
