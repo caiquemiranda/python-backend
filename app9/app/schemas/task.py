@@ -1,11 +1,3 @@
-#!/usr/bin/env python
-# -*- coding: utf-8 -*-
-
-"""
-Schemas para Tarefas
-Este módulo define os schemas Pydantic para validação e serialização de tarefas.
-"""
-
 from datetime import datetime
 from typing import Optional
 

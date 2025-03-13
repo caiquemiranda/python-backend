@@ -1,11 +1,3 @@
-#!/usr/bin/env python
-# -*- coding: utf-8 -*-
-
-"""
-Modelo de Tarefa
-Este módulo define o modelo de dados para tarefas usando SQLAlchemy ORM.
-"""
-
 from sqlalchemy import Boolean, Column, Integer, String, Text, DateTime
 from sqlalchemy.sql import func
 

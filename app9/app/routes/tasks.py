@@ -1,11 +1,3 @@
-#!/usr/bin/env python
-# -*- coding: utf-8 -*-
-
-"""
-Rotas para Tarefas
-Este módulo define as rotas da API para operações CRUD em tarefas.
-"""
-
 from typing import List, Optional
 
 from fastapi import APIRouter, Depends, HTTPException, Query, Path
