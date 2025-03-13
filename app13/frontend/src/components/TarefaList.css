@@ -1,0 +1,125 @@
+.tarefa-list {
+    width: 100%;
+    margin-top: 20px;
+}
+
+.tarefa-vazia {
+    text-align: center;
+    padding: 30px;
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+.tarefa-vazia p {
+    margin-bottom: 10px;
+    color: #666;
+}
+
+.tarefa-vazia .dica {
+    font-size: 0.9rem;
+    color: #999;
+}
+
+.tarefa-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 20px;
+}
+
+.tarefa-card {
+    position: relative;
+    background-color: #fff;
+    border-radius: 8px;
+    padding: 20px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.tarefa-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.15);
+}
+
+.tarefa-card.concluida {
+    background-color: #f8f8f8;
+    border: 1px solid #eaeaea;
+}
+
+.tarefa-card.concluida h3 {
+    text-decoration: line-through;
+    color: #888;
+}
+
+.prioridade-tag {
+    position: absolute;
+    top: 0;
+    right: 0;
+    color: #fff;
+    font-size: 0.8rem;
+    padding: 4px 10px;
+    border-radius: 0 8px 0 8px;
+    text-transform: uppercase;
+    font-weight: bold;
+}
+
+.tarefa-card h3 {
+    margin-top: 10px;
+    margin-bottom: 15px;
+    color: #333;
+    font-size: 1.2rem;
+}
+
+.descricao {
+    color: #666;
+    margin-bottom: 15px;
+    line-height: 1.4;
+    min-height: 40px;
+    font-size: 0.95rem;
+}
+
+.tarefa-meta {
+    margin-bottom: 15px;
+}
+
+.data-criacao {
+    font-size: 0.85rem;
+    color: #888;
+}
+
+.tarefa-acoes {
+    display: flex;
+    justify-content: flex-start;
+    gap: 10px;
+    margin-top: 10px;
+}
+
+.tarefa-acoes button {
+    background: none;
+    border: none;
+    font-size: 1.1rem;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    transition: background-color 0.2s;
+}
+
+.botao-status {
+    color: #52c41a;
+}
+
+.botao-editar {
+    color: #1890ff;
+}
+
+.botao-excluir {
+    color: #ff4d4f;
+}
+
+.tarefa-acoes button:hover {
+    background-color: #f0f0f0;
+}
