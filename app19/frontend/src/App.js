@@ -1,43 +1,50 @@
 /**
  * Componente principal da aplicação
- * Define as rotas e a estrutura básica da aplicação
+ * Configura rotas, temas e autenticação
  */
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import { ToastContainer } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
 
 // Contextos
 import { AuthProvider } from './contexts/AuthContext';
 import { ThemeProvider } from './contexts/ThemeContext';
 
-// Componentes de layout
+// Componentes de Layout
 import Header from './components/layout/Header';
 import Footer from './components/layout/Footer';
 
 // Páginas
 import HomePage from './pages/HomePage';
-import LoginPage from './pages/LoginPage';
-import RegisterPage from './pages/RegisterPage';
+import LoginPage from './pages/auth/LoginPage';
+import RegisterPage from './pages/auth/RegisterPage';
+import ForgotPasswordPage from './pages/auth/ForgotPasswordPage';
 import DashboardPage from './pages/DashboardPage';
-import ProfilePage from './pages/ProfilePage';
+import FileUploadPage from './pages/FileUploadPage';
 import FileListPage from './pages/FileListPage';
 import FileDetailPage from './pages/FileDetailPage';
-import FileUploadPage from './pages/FileUploadPage';
-import AboutPage from './pages/AboutPage';
+import ProfilePage from './pages/ProfilePage';
 import NotFoundPage from './pages/NotFoundPage';
 
-// Componente de rota protegida
+// Componentes de autenticação
 import PrivateRoute from './components/auth/PrivateRoute';
 
-// Estilos globais
+// Estilos
+import './styles/variables.css';
+import './styles/reset.css';
+import './styles/global.css';
 import './App.css';
+import 'react-toastify/dist/ReactToastify.css';
 
+/**
+ * Componente principal da aplicação
+ * Configura provedores de contexto, roteamento e layout global
+ */
 const App = () => {
     return (
-        <Router>
-            <ThemeProvider>
-                <AuthProvider>
+        <ThemeProvider>
+            <AuthProvider>
+                <Router>
                     <div className="app">
                         <Header />
                         <main className="main-content">
@@ -46,45 +53,44 @@ const App = () => {
                                 <Route path="/" element={<HomePage />} />
                                 <Route path="/login" element={<LoginPage />} />
                                 <Route path="/register" element={<RegisterPage />} />
-                                <Route path="/files" element={<FileListPage />} />
-                                <Route path="/files/:id" element={<FileDetailPage />} />
-                                <Route path="/about" element={<AboutPage />} />
+                                <Route path="/forgot-password" element={<ForgotPasswordPage />} />
 
                                 {/* Rotas protegidas */}
-                                <Route
-                                    path="/dashboard"
-                                    element={
-                                        <PrivateRoute>
-                                            <DashboardPage />
-                                        </PrivateRoute>
-                                    }
-                                />
-                                <Route
-                                    path="/profile"
-                                    element={
-                                        <PrivateRoute>
-                                            <ProfilePage />
-                                        </PrivateRoute>
-                                    }
-                                />
-                                <Route
-                                    path="/upload"
-                                    element={
-                                        <PrivateRoute>
-                                            <FileUploadPage />
-                                        </PrivateRoute>
-                                    }
-                                />
+                                <Route path="/dashboard" element={
+                                    <PrivateRoute>
+                                        <DashboardPage />
+                                    </PrivateRoute>
+                                } />
 
-                                {/* Rotas de termos e privacidade */}
-                                <Route path="/terms" element={<AboutPage section="terms" />} />
-                                <Route path="/privacy" element={<AboutPage section="privacy" />} />
+                                <Route path="/files/upload" element={
+                                    <PrivateRoute>
+                                        <FileUploadPage />
+                                    </PrivateRoute>
+                                } />
 
-                                {/* Rota para página não encontrada */}
-                                <Route path="/404" element={<NotFoundPage />} />
+                                <Route path="/files" element={
+                                    <PrivateRoute>
+                                        <FileListPage />
+                                    </PrivateRoute>
+                                } />
 
-                                {/* Redireciona qualquer rota não definida para 404 */}
-                                <Route path="*" element={<Navigate to="/404" replace />} />
+                                <Route path="/files/:id" element={
+                                    <PrivateRoute>
+                                        <FileDetailPage />
+                                    </PrivateRoute>
+                                } />
+
+                                <Route path="/profile" element={
+                                    <PrivateRoute>
+                                        <ProfilePage />
+                                    </PrivateRoute>
+                                } />
+
+                                {/* Rota para não encontrado */}
+                                <Route path="/not-found" element={<NotFoundPage />} />
+
+                                {/* Redireciona para não encontrado */}
+                                <Route path="*" element={<Navigate to="/not-found" replace />} />
                             </Routes>
                         </main>
                         <Footer />
@@ -102,9 +108,9 @@ const App = () => {
                             pauseOnHover
                         />
                     </div>
-                </AuthProvider>
-            </ThemeProvider>
-        </Router>
+                </Router>
+            </AuthProvider>
+        </ThemeProvider>
     );
 };
 

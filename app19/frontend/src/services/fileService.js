@@ -1,29 +1,22 @@
 /**
- * Serviço para gerenciar operações relacionadas a arquivos
- * Fornece métodos para listar, buscar, fazer upload, atualizar e excluir arquivos
+ * Serviço para gerenciamento de arquivos
+ * Contém métodos para interagir com a API de arquivos
  */
-import axios from 'axios';
-import { getAuthHeader } from './authService';
-
-// URL base da API
-const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:8000/api';
+import api from './api';
 
 /**
- * Serviço para gerenciar operações de arquivos
+ * Classe de serviço para operações com arquivos
  */
-const fileService = {
+const FileService = {
     /**
      * Obtém a lista de todos os arquivos
-     * @param {Object} params - Parâmetros de consulta (filtros, ordenação, etc.)
-     * @returns {Promise} - Promise com a resposta da API
+     * @param {Object} params - Parâmetros de filtro e paginação
+     * @returns {Promise} Promise com resultado da requisição
      */
     getFiles: async (params = {}) => {
         try {
-            const response = await axios.get(`${API_URL}/files/`, {
-                headers: getAuthHeader(),
-                params
-            });
-            return response;
+            const response = await api.get('/api/files/', { params });
+            return response.data;
         } catch (error) {
             console.error('Erro ao buscar arquivos:', error);
             throw error;
@@ -31,36 +24,78 @@ const fileService = {
     },
 
     /**
-     * Obtém detalhes de um arquivo específico
-     * @param {string|number} id - ID do arquivo
-     * @returns {Promise} - Promise com a resposta da API
+     * Obtém arquivos filtrados por tipo
+     * @param {string} type - Tipo de arquivo (image, document, other)
+     * @returns {Promise} Promise com resultado da requisição
      */
-    getFileById: async (id) => {
+    getFilesByType: async (type) => {
         try {
-            const response = await axios.get(`${API_URL}/files/${id}/`, {
-                headers: getAuthHeader()
+            const response = await api.get(`/api/files/filter_by_type/`, {
+                params: { type }
             });
-            return response;
+            return response.data;
         } catch (error) {
-            console.error(`Erro ao buscar arquivo ${id}:`, error);
+            console.error(`Erro ao buscar arquivos do tipo ${type}:`, error);
+            throw error;
+        }
+    },
+
+    /**
+     * Obtém somente imagens
+     * @returns {Promise} Promise com resultado da requisição
+     */
+    getImages: async () => {
+        try {
+            const response = await api.get('/api/files/images/');
+            return response.data;
+        } catch (error) {
+            console.error('Erro ao buscar imagens:', error);
+            throw error;
+        }
+    },
+
+    /**
+     * Obtém somente documentos
+     * @returns {Promise} Promise com resultado da requisição
+     */
+    getDocuments: async () => {
+        try {
+            const response = await api.get('/api/files/documents/');
+            return response.data;
+        } catch (error) {
+            console.error('Erro ao buscar documentos:', error);
+            throw error;
+        }
+    },
+
+    /**
+     * Obtém um arquivo específico pelo ID
+     * @param {number} id - ID do arquivo
+     * @returns {Promise} Promise com resultado da requisição
+     */
+    getFile: async (id) => {
+        try {
+            const response = await api.get(`/api/files/${id}/`);
+            return response.data;
+        } catch (error) {
+            console.error(`Erro ao buscar arquivo com ID ${id}:`, error);
             throw error;
         }
     },
 
     /**
      * Faz upload de um novo arquivo
-     * @param {FormData} formData - Dados do arquivo e metadados
-     * @returns {Promise} - Promise com a resposta da API
+     * @param {FormData} formData - Dados do formulário contendo o arquivo
+     * @returns {Promise} Promise com resultado da requisição
      */
     uploadFile: async (formData) => {
         try {
-            const response = await axios.post(`${API_URL}/files/`, formData, {
+            const response = await api.post('/api/files/', formData, {
                 headers: {
-                    ...getAuthHeader(),
                     'Content-Type': 'multipart/form-data'
                 }
             });
-            return response;
+            return response.data;
         } catch (error) {
             console.error('Erro ao fazer upload do arquivo:', error);
             throw error;
@@ -68,100 +103,55 @@ const fileService = {
     },
 
     /**
-     * Atualiza os metadados de um arquivo existente
-     * @param {string|number} id - ID do arquivo
-     * @param {Object} data - Dados atualizados
-     * @returns {Promise} - Promise com a resposta da API
+     * Atualiza um arquivo existente
+     * @param {number} id - ID do arquivo
+     * @param {FormData} formData - Dados do formulário contendo o arquivo
+     * @returns {Promise} Promise com resultado da requisição
      */
-    updateFile: async (id, data) => {
+    updateFile: async (id, formData) => {
         try {
-            const response = await axios.patch(`${API_URL}/files/${id}/`, data, {
-                headers: getAuthHeader()
+            const response = await api.put(`/api/files/${id}/`, formData, {
+                headers: {
+                    'Content-Type': 'multipart/form-data'
+                }
             });
-            return response;
+            return response.data;
         } catch (error) {
-            console.error(`Erro ao atualizar arquivo ${id}:`, error);
+            console.error(`Erro ao atualizar arquivo com ID ${id}:`, error);
+            throw error;
+        }
+    },
+
+    /**
+     * Atualiza parcialmente um arquivo existente
+     * @param {number} id - ID do arquivo
+     * @param {Object} data - Dados para atualização parcial
+     * @returns {Promise} Promise com resultado da requisição
+     */
+    patchFile: async (id, data) => {
+        try {
+            const response = await api.patch(`/api/files/${id}/`, data);
+            return response.data;
+        } catch (error) {
+            console.error(`Erro ao atualizar parcialmente arquivo com ID ${id}:`, error);
             throw error;
         }
     },
 
     /**
      * Exclui um arquivo
-     * @param {string|number} id - ID do arquivo
-     * @returns {Promise} - Promise com a resposta da API
+     * @param {number} id - ID do arquivo
+     * @returns {Promise} Promise com resultado da requisição
      */
     deleteFile: async (id) => {
         try {
-            const response = await axios.delete(`${API_URL}/files/${id}/`, {
-                headers: getAuthHeader()
-            });
-            return response;
+            const response = await api.delete(`/api/files/${id}/`);
+            return response.data;
         } catch (error) {
-            console.error(`Erro ao excluir arquivo ${id}:`, error);
-            throw error;
-        }
-    },
-
-    /**
-     * Obtém a URL para download de um arquivo
-     * @param {string|number} id - ID do arquivo
-     * @returns {string} - URL para download
-     */
-    getDownloadUrl: (id) => {
-        return `${API_URL}/files/${id}/download/`;
-    },
-
-    /**
-     * Busca arquivos por termo de pesquisa
-     * @param {string} searchTerm - Termo de pesquisa
-     * @returns {Promise} - Promise com a resposta da API
-     */
-    searchFiles: async (searchTerm) => {
-        try {
-            const response = await axios.get(`${API_URL}/files/search/`, {
-                headers: getAuthHeader(),
-                params: { q: searchTerm }
-            });
-            return response;
-        } catch (error) {
-            console.error('Erro ao pesquisar arquivos:', error);
-            throw error;
-        }
-    },
-
-    /**
-     * Obtém arquivos por tipo
-     * @param {string} fileType - Tipo de arquivo (image, document, etc.)
-     * @returns {Promise} - Promise com a resposta da API
-     */
-    getFilesByType: async (fileType) => {
-        try {
-            const response = await axios.get(`${API_URL}/files/`, {
-                headers: getAuthHeader(),
-                params: { file_type: fileType }
-            });
-            return response;
-        } catch (error) {
-            console.error(`Erro ao buscar arquivos do tipo ${fileType}:`, error);
-            throw error;
-        }
-    },
-
-    /**
-     * Obtém estatísticas de arquivos (contagem por tipo, tamanho total, etc.)
-     * @returns {Promise} - Promise com a resposta da API
-     */
-    getFileStats: async () => {
-        try {
-            const response = await axios.get(`${API_URL}/files/stats/`, {
-                headers: getAuthHeader()
-            });
-            return response;
-        } catch (error) {
-            console.error('Erro ao buscar estatísticas de arquivos:', error);
+            console.error(`Erro ao excluir arquivo com ID ${id}:`, error);
             throw error;
         }
     }
 };
 
-export default fileService; 
+export default FileService; 

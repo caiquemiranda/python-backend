@@ -7,6 +7,10 @@ import React, { useEffect, useRef } from 'react';
 import PropTypes from 'prop-types';
 import './Modal.css';
 
+/**
+ * Componente Modal reutilizável
+ * @param {Object} props - Propriedades do componente
+ */
 const Modal = ({
     isOpen,
     onClose,
@@ -21,15 +25,17 @@ const Modal = ({
 }) => {
     const modalRef = useRef(null);
 
+    // Fecha o modal ao pressionar ESC
     useEffect(() => {
         const handleEsc = (event) => {
-            if (closeOnEsc && event.key === 'Escape') {
+            if (closeOnEsc && isOpen && event.key === 'Escape') {
                 onClose();
             }
         };
 
         if (isOpen) {
             document.addEventListener('keydown', handleEsc);
+            // Impede o scroll da página quando o modal está aberto
             document.body.style.overflow = 'hidden';
         }
 
@@ -39,12 +45,18 @@ const Modal = ({
         };
     }, [isOpen, onClose, closeOnEsc]);
 
+    // Fechar ao clicar fora do modal
     const handleOverlayClick = (event) => {
-        if (closeOnOverlayClick && event.target === event.currentTarget) {
+        if (
+            closeOnOverlayClick &&
+            modalRef.current &&
+            !modalRef.current.contains(event.target)
+        ) {
             onClose();
         }
     };
 
+    // Se o modal não estiver aberto, não renderiza nada
     if (!isOpen) return null;
 
     return (
@@ -52,46 +64,31 @@ const Modal = ({
             <div
                 ref={modalRef}
                 className={`modal modal-${size} ${className}`}
-                role="dialog"
-                aria-modal="true"
-                aria-labelledby="modal-title"
                 {...props}
             >
                 <div className="modal-header">
-                    <h5 id="modal-title" className="modal-title">{title}</h5>
+                    <h3 className="modal-title">{title}</h3>
                     {showCloseButton && (
                         <button
                             type="button"
                             className="modal-close"
-                            aria-label="Fechar"
                             onClick={onClose}
+                            aria-label="Fechar"
                         >
-                            <span aria-hidden="true">&times;</span>
+                            &times;
                         </button>
                     )}
                 </div>
-                <div className="modal-body">
-                    {children}
-                </div>
+                <div className="modal-body">{children}</div>
             </div>
         </div>
     );
 };
 
-const ModalFooter = ({ children, className = '', ...props }) => {
-    return (
-        <div className={`modal-footer ${className}`} {...props}>
-            {children}
-        </div>
-    );
-};
-
-Modal.Footer = ModalFooter;
-
 Modal.propTypes = {
     isOpen: PropTypes.bool.isRequired,
     onClose: PropTypes.func.isRequired,
-    title: PropTypes.node.isRequired,
+    title: PropTypes.string,
     children: PropTypes.node.isRequired,
     size: PropTypes.oneOf(['sm', 'md', 'lg', 'xl']),
     closeOnEsc: PropTypes.bool,
@@ -100,9 +97,22 @@ Modal.propTypes = {
     className: PropTypes.string
 };
 
+/**
+ * Componente para o rodapé do modal
+ */
+const ModalFooter = ({ children, className = '', ...props }) => {
+    return (
+        <div className={`modal-footer ${className}`} {...props}>
+            {children}
+        </div>
+    );
+};
+
 ModalFooter.propTypes = {
     children: PropTypes.node.isRequired,
     className: PropTypes.string
 };
+
+Modal.Footer = ModalFooter;
 
 export default Modal; 

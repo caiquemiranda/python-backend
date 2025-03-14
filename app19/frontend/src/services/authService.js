@@ -1,48 +1,40 @@
 /**
- * Serviço para gerenciar autenticação e autorização
- * Fornece métodos para login, registro, gerenciamento de tokens e verificação de autenticação
+ * Serviço para gerenciamento de autenticação
+ * Contém métodos para login, logout, registro e gerenciamento de tokens
  */
-import axios from 'axios';
-import jwt_decode from 'jwt-decode';
-
-// URL base da API
-const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:8000/api';
+import api from './api';
+import jwtDecode from 'jwt-decode';
 
 // Chaves para armazenamento no localStorage
-const TOKEN_KEY = 'auth_token';
+const ACCESS_TOKEN_KEY = 'auth_token';
 const REFRESH_TOKEN_KEY = 'refresh_token';
-const USER_KEY = 'user_info';
+const USER_INFO_KEY = 'user_info';
 
 /**
- * Serviço de autenticação
+ * Classe de serviço para operações de autenticação
  */
-const authService = {
+const AuthService = {
     /**
      * Realiza o login do usuário
-     * @param {string} username - Nome de usuário
-     * @param {string} password - Senha
-     * @returns {Promise} - Promise com a resposta da API
+     * @param {Object} credentials - Dados de login (email/username e senha)
+     * @returns {Promise} Promise com o resultado da requisição
      */
-    login: async (username, password) => {
+    login: async (credentials) => {
         try {
-            const response = await axios.post(`${API_URL}/auth/token/`, {
-                username,
-                password
-            });
+            const response = await api.post('/api/auth/token/', credentials);
+            const { access, refresh, user } = response.data;
 
-            if (response.data.access) {
-                // Armazena tokens e informações do usuário
-                localStorage.setItem(TOKEN_KEY, response.data.access);
-                localStorage.setItem(REFRESH_TOKEN_KEY, response.data.refresh);
+            // Salva tokens e informações do usuário
+            localStorage.setItem(ACCESS_TOKEN_KEY, access);
+            localStorage.setItem(REFRESH_TOKEN_KEY, refresh);
+            localStorage.setItem(USER_INFO_KEY, JSON.stringify(user));
 
-                // Decodifica o token para obter informações do usuário
-                const user = jwt_decode(response.data.access);
-                localStorage.setItem(USER_KEY, JSON.stringify(user));
-            }
+            // Configura token no cabeçalho para futuras requisições
+            api.defaults.headers.common['Authorization'] = `Bearer ${access}`;
 
-            return response;
+            return user;
         } catch (error) {
-            console.error('Erro ao fazer login:', error);
+            console.error('Erro ao realizar login:', error);
             throw error;
         }
     },
@@ -50,12 +42,12 @@ const authService = {
     /**
      * Registra um novo usuário
      * @param {Object} userData - Dados do usuário (nome, email, senha, etc.)
-     * @returns {Promise} - Promise com a resposta da API
+     * @returns {Promise} Promise com o resultado da requisição
      */
     register: async (userData) => {
         try {
-            const response = await axios.post(`${API_URL}/auth/register/`, userData);
-            return response;
+            const response = await api.post('/api/auth/register/', userData);
+            return response.data;
         } catch (error) {
             console.error('Erro ao registrar usuário:', error);
             throw error;
@@ -66,141 +58,142 @@ const authService = {
      * Realiza o logout do usuário
      */
     logout: () => {
-        localStorage.removeItem(TOKEN_KEY);
+        localStorage.removeItem(ACCESS_TOKEN_KEY);
         localStorage.removeItem(REFRESH_TOKEN_KEY);
-        localStorage.removeItem(USER_KEY);
+        localStorage.removeItem(USER_INFO_KEY);
+
+        // Remove o token de autorização do cabeçalho
+        delete api.defaults.headers.common['Authorization'];
+    },
+
+    /**
+     * Atualiza o token de acesso usando o token de atualização
+     * @returns {Promise} Promise com o novo token
+     */
+    refreshToken: async () => {
+        const refreshToken = localStorage.getItem(REFRESH_TOKEN_KEY);
+
+        if (!refreshToken) {
+            throw new Error('Token de atualização não encontrado');
+        }
+
+        try {
+            const response = await api.post('/api/auth/token/refresh/', {
+                refresh: refreshToken
+            });
+
+            const { access } = response.data;
+            localStorage.setItem(ACCESS_TOKEN_KEY, access);
+
+            // Atualiza o token no cabeçalho
+            api.defaults.headers.common['Authorization'] = `Bearer ${access}`;
+
+            return access;
+        } catch (error) {
+            console.error('Erro ao atualizar token:', error);
+            AuthService.logout(); // Força logout se não conseguir atualizar
+            throw error;
+        }
     },
 
     /**
      * Verifica se o usuário está autenticado
-     * @returns {boolean} - Verdadeiro se o usuário estiver autenticado
+     * @returns {boolean} True se o usuário estiver autenticado
      */
     isAuthenticated: () => {
-        const token = localStorage.getItem(TOKEN_KEY);
-        if (!token) return false;
+        const token = localStorage.getItem(ACCESS_TOKEN_KEY);
+
+        if (!token) {
+            return false;
+        }
 
         try {
-            const decoded = jwt_decode(token);
+            const decoded = jwtDecode(token);
             const currentTime = Date.now() / 1000;
 
             // Verifica se o token não expirou
-            if (decoded.exp < currentTime) {
-                // Token expirado, tenta renovar
-                authService.refreshToken();
-                return false;
-            }
-
-            return true;
+            return decoded.exp > currentTime;
         } catch (error) {
-            console.error('Erro ao verificar autenticação:', error);
             return false;
         }
     },
 
     /**
-     * Renova o token de acesso usando o token de atualização
-     * @returns {Promise} - Promise com o resultado da renovação
-     */
-    refreshToken: async () => {
-        const refreshToken = localStorage.getItem(REFRESH_TOKEN_KEY);
-        if (!refreshToken) return Promise.reject('Nenhum token de atualização disponível');
-
-        try {
-            const response = await axios.post(`${API_URL}/auth/token/refresh/`, {
-                refresh: refreshToken
-            });
-
-            if (response.data.access) {
-                localStorage.setItem(TOKEN_KEY, response.data.access);
-
-                // Atualiza as informações do usuário
-                const user = jwt_decode(response.data.access);
-                localStorage.setItem(USER_KEY, JSON.stringify(user));
-
-                return response;
-            }
-        } catch (error) {
-            console.error('Erro ao renovar token:', error);
-            // Se não conseguir renovar, faz logout
-            authService.logout();
-            throw error;
-        }
-    },
-
-    /**
-     * Obtém o token de autenticação atual
-     * @returns {string|null} - Token de autenticação ou null
-     */
-    getToken: () => {
-        return localStorage.getItem(TOKEN_KEY);
-    },
-
-    /**
-     * Obtém as informações do usuário atual
-     * @returns {Object|null} - Informações do usuário ou null
+     * Obtém os dados do usuário atual
+     * @returns {Object|null} Dados do usuário ou null se não estiver autenticado
      */
     getCurrentUser: () => {
-        const userStr = localStorage.getItem(USER_KEY);
-        if (!userStr) return null;
-
         try {
-            return JSON.parse(userStr);
+            const userStr = localStorage.getItem(USER_INFO_KEY);
+
+            if (userStr) {
+                return JSON.parse(userStr);
+            }
+
+            return null;
         } catch (error) {
-            console.error('Erro ao obter informações do usuário:', error);
+            console.error('Erro ao obter usuário atual:', error);
             return null;
         }
     },
 
     /**
-     * Obtém os cabeçalhos de autenticação para requisições
-     * @returns {Object} - Cabeçalhos de autenticação
+     * Atualiza as informações do usuário no armazenamento local
+     * @param {Object} userData - Novos dados do usuário
+     */
+    updateUserInfo: (userData) => {
+        localStorage.setItem(USER_INFO_KEY, JSON.stringify(userData));
+    },
+
+    /**
+     * Obtém o cabeçalho de autorização para requisições
+     * @returns {Object} Cabeçalho de autorização ou objeto vazio
      */
     getAuthHeader: () => {
-        const token = authService.getToken();
+        const token = localStorage.getItem(ACCESS_TOKEN_KEY);
+
         if (token) {
             return { Authorization: `Bearer ${token}` };
         }
+
         return {};
     },
 
     /**
-     * Atualiza o perfil do usuário
-     * @param {Object} userData - Dados atualizados do usuário
-     * @returns {Promise} - Promise com a resposta da API
+     * Solicita redefinição de senha
+     * @param {string} email - Email do usuário
+     * @returns {Promise} Promise com o resultado da requisição
      */
-    updateProfile: async (userData) => {
+    requestPasswordReset: async (email) => {
         try {
-            const response = await axios.patch(`${API_URL}/auth/profile/`, userData, {
-                headers: authService.getAuthHeader()
-            });
-            return response;
+            const response = await api.post('/api/auth/password-reset/', { email });
+            return response.data;
         } catch (error) {
-            console.error('Erro ao atualizar perfil:', error);
+            console.error('Erro ao solicitar redefinição de senha:', error);
             throw error;
         }
     },
 
     /**
-     * Altera a senha do usuário
-     * @param {string} oldPassword - Senha atual
-     * @param {string} newPassword - Nova senha
-     * @returns {Promise} - Promise com a resposta da API
+     * Redefine a senha usando o token recebido por email
+     * @param {Object} resetData - Dados para redefinição (token, nova senha)
+     * @returns {Promise} Promise com o resultado da requisição
      */
-    changePassword: async (oldPassword, newPassword) => {
+    resetPassword: async (resetData) => {
         try {
-            const response = await axios.post(
-                `${API_URL}/auth/change-password/`,
-                { old_password: oldPassword, new_password: newPassword },
-                { headers: authService.getAuthHeader() }
-            );
-            return response;
+            const response = await api.post('/api/auth/password-reset/confirm/', resetData);
+            return response.data;
         } catch (error) {
-            console.error('Erro ao alterar senha:', error);
+            console.error('Erro ao redefinir senha:', error);
             throw error;
         }
     }
 };
 
-// Exporta o serviço e a função getAuthHeader para uso em outros serviços
-export default authService;
-export const getAuthHeader = authService.getAuthHeader; 
+// Configura o token de autenticação se ele existir no localStorage
+const token = localStorage.getItem(ACCESS_TOKEN_KEY);
+if (token) {
+    api.defaults.headers.common['Authorization'] = `Bearer ${token}`;
+}
+
+export default AuthService; 
