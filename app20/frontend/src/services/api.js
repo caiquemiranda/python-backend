@@ -24,13 +24,15 @@ const api = axios.create({
  */
 api.interceptors.request.use(
     (config) => {
-        const token = localStorage.getItem('token');
+        const token = localStorage.getItem('access_token');
         if (token) {
             config.headers.Authorization = `Bearer ${token}`;
         }
         return config;
     },
-    (error) => Promise.reject(error)
+    (error) => {
+        return Promise.reject(error);
+    }
 );
 
 /**
@@ -39,47 +41,54 @@ api.interceptors.request.use(
  * e o tratamento de erros comuns
  */
 api.interceptors.response.use(
-    (response) => response,
+    (response) => {
+        return response;
+    },
     async (error) => {
         const originalRequest = error.config;
 
         // Se o erro for 401 (não autorizado) e não for uma tentativa de refresh
-        if (error.response.status === 401 && !originalRequest._retry && originalRequest.url !== '/users/token/refresh/') {
+        if (
+            error.response &&
+            error.response.status === 401 &&
+            !originalRequest._retry &&
+            !originalRequest.url.includes('auth/token')
+        ) {
             originalRequest._retry = true;
 
             try {
-                // Tenta renovar o token
-                const refreshToken = localStorage.getItem('refreshToken');
+                // Tenta obter um novo token de acesso usando o refresh token
+                const refreshToken = localStorage.getItem('refresh_token');
+
                 if (!refreshToken) {
-                    throw new Error('Sem refresh token');
+                    // Se não houver refresh token, redireciona para o login
+                    window.location.href = '/login';
+                    return Promise.reject(error);
                 }
 
-                const response = await axios.post(`${API_URL}/users/token/refresh/`, {
-                    refresh: refreshToken,
-                });
+                const response = await axios.post(
+                    `${API_URL}/auth/token/refresh/`,
+                    { refresh: refreshToken }
+                );
 
-                const { access } = response.data;
+                // Se conseguir um novo token, atualiza o armazenamento local e os headers
+                if (response.data.access) {
+                    localStorage.setItem('access_token', response.data.access);
+                    api.defaults.headers.common['Authorization'] = `Bearer ${response.data.access}`;
+                    originalRequest.headers.Authorization = `Bearer ${response.data.access}`;
 
-                // Atualiza o token no localStorage
-                localStorage.setItem('token', access);
-
-                // Atualiza o cabeçalho de autorização da requisição original
-                originalRequest.headers.Authorization = `Bearer ${access}`;
-
-                // Refaz a requisição original
-                return api(originalRequest);
+                    // Refaz a requisição original com o novo token
+                    return api(originalRequest);
+                }
             } catch (refreshError) {
-                // Se não conseguir renovar o token, faz logout
-                localStorage.removeItem('token');
-                localStorage.removeItem('refreshToken');
-                localStorage.removeItem('user');
-
-                // Redireciona para a página de login
+                // Se não conseguir atualizar o token, limpa os dados e redireciona para login
+                localStorage.removeItem('access_token');
+                localStorage.removeItem('refresh_token');
                 window.location.href = '/login';
-                return Promise.reject(refreshError);
             }
         }
 
+        // Propagação normal do erro para outros tipos de erros
         return Promise.reject(error);
     }
 );
@@ -99,8 +108,8 @@ export const authService = {
             const { access, refresh, user } = response.data;
 
             // Salva tokens e informações do usuário
-            localStorage.setItem('token', access);
-            localStorage.setItem('refreshToken', refresh);
+            localStorage.setItem('access_token', access);
+            localStorage.setItem('refresh_token', refresh);
             localStorage.setItem('user', JSON.stringify(user));
 
             return user;
@@ -122,8 +131,8 @@ export const authService = {
      * Faz logout do usuário
      */
     logout: () => {
-        localStorage.removeItem('token');
-        localStorage.removeItem('refreshToken');
+        localStorage.removeItem('access_token');
+        localStorage.removeItem('refresh_token');
         localStorage.removeItem('user');
     },
 
@@ -132,7 +141,7 @@ export const authService = {
      * @returns {Boolean} Verdadeiro se o usuário estiver autenticado
      */
     isAuthenticated: () => {
-        return !!localStorage.getItem('token');
+        return !!localStorage.getItem('access_token');
     },
 
     /**
@@ -248,9 +257,7 @@ export const projectService = {
      * @returns {Promise} Promessa com a resposta da API
      */
     removeProjectMember: (projectId, userId) => {
-        return api.delete(`/projects/${projectId}/members/`, {
-            data: { user_id: userId }
-        });
+        return api.delete(`/projects/${projectId}/members/${userId}/`);
     },
 
     /**
@@ -260,6 +267,13 @@ export const projectService = {
     getCategories: () => {
         return api.get('/projects/categories/');
     },
+
+    /**
+     * Obtém estatísticas do projeto
+     * @param {Number} id - ID do projeto
+     * @returns {Promise} - Estatísticas do projeto
+     */
+    getStats: (id) => api.get(`/projects/${id}/stats/`)
 };
 
 /**
@@ -272,7 +286,7 @@ export const taskService = {
      * @returns {Promise} Promessa com a lista de tarefas
      */
     getTasks: (filters = {}) => {
-        return api.get('/tasks/tasks/', { params: filters });
+        return api.get('/tasks/', { params: filters });
     },
 
     /**
@@ -305,7 +319,7 @@ export const taskService = {
      * @returns {Promise} Promessa com os dados da tarefa
      */
     getTask: (id) => {
-        return api.get(`/tasks/tasks/${id}/`);
+        return api.get(`/tasks/${id}/`);
     },
 
     /**
@@ -314,7 +328,7 @@ export const taskService = {
      * @returns {Promise} Promessa com a resposta da API
      */
     createTask: (taskData) => {
-        return api.post('/tasks/tasks/', taskData);
+        return api.post('/tasks/', taskData);
     },
 
     /**
@@ -324,7 +338,7 @@ export const taskService = {
      * @returns {Promise} Promessa com a resposta da API
      */
     updateTask: (id, taskData) => {
-        return api.put(`/tasks/tasks/${id}/`, taskData);
+        return api.put(`/tasks/${id}/`, taskData);
     },
 
     /**
@@ -333,7 +347,7 @@ export const taskService = {
      * @returns {Promise} Promessa com a resposta da API
      */
     deleteTask: (id) => {
-        return api.delete(`/tasks/tasks/${id}/`);
+        return api.delete(`/tasks/${id}/`);
     },
 
     /**
@@ -343,7 +357,7 @@ export const taskService = {
      * @returns {Promise} Promessa com a resposta da API
      */
     changeTaskStatus: (id, status) => {
-        return api.post(`/tasks/tasks/${id}/change-status/`, { status });
+        return api.patch(`/tasks/${id}/`, { status });
     },
 
     /**
@@ -417,6 +431,53 @@ export const taskService = {
     getMyTimeEntries: (filters = {}) => {
         return api.get('/tasks/time-entries/my-entries/', { params: filters });
     },
+};
+
+/**
+ * Serviços para usuários
+ */
+export const userService = {
+    /**
+     * Obtém todos os usuários
+     * @param {Object} params - Parâmetros para filtragem (opcional)
+     * @returns {Promise} - Lista de usuários
+     */
+    getAll: (params = {}) => api.get('/users/', { params }),
+
+    /**
+     * Obtém um usuário específico pelo ID
+     * @param {Number} id - ID do usuário
+     * @returns {Promise} - Detalhes do usuário
+     */
+    getById: (id) => api.get(`/users/${id}/`),
+
+    /**
+     * Obtém o perfil do usuário atual
+     * @returns {Promise} - Perfil do usuário
+     */
+    getProfile: () => api.get('/users/me/'),
+
+    /**
+     * Atualiza o perfil do usuário
+     * @param {Object} data - Novos dados do perfil
+     * @returns {Promise} - Perfil atualizado
+     */
+    updateProfile: (data) => api.patch('/users/me/', data),
+
+    /**
+     * Altera a senha do usuário
+     * @param {Object} passwordData - Dados de senha antiga e nova
+     * @returns {Promise} - Resposta da API
+     */
+    changePassword: (passwordData) =>
+        api.post('/users/change-password/', passwordData),
+
+    /**
+     * Busca usuários pelo nome ou email
+     * @param {String} query - Texto para busca
+     * @returns {Promise} - Lista de usuários encontrados
+     */
+    search: (query) => api.get('/users/search/', { params: { q: query } })
 };
 
 export default api; 

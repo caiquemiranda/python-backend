@@ -1,122 +1,180 @@
 /**
- * Contexto de autenticação para gerenciar o estado de autenticação 
- * e fornecer funcionalidades de autenticação para toda a aplicação.
+ * Contexto de autenticação para gerenciar o estado de autenticação do usuário
+ * Fornece funções para login, logout, registro e verificação do estado de autenticação
  */
-import React, { createContext, useContext, useState, useEffect } from 'react';
-import { authService } from '../services/api';
+import React, { createContext, useState, useContext, useEffect } from 'react';
+import api from '../services/api';
+import jwt_decode from 'jwt-decode';
 
-// Criação do contexto de autenticação
-const AuthContext = createContext(null);
+// Cria o contexto de autenticação
+const AuthContext = createContext();
 
-/**
- * Provider do contexto de autenticação.
- * Fornece o estado de autenticação e métodos relacionados para os componentes filhos.
- */
+// Hook personalizado para usar o contexto de autenticação
+export const useAuth = () => useContext(AuthContext);
+
 export const AuthProvider = ({ children }) => {
     // Estado para armazenar informações do usuário autenticado
     const [user, setUser] = useState(null);
-    // Estado para controlar se a verificação inicial foi concluída
+    // Estado para controlar se a autenticação está sendo verificada
     const [loading, setLoading] = useState(true);
 
-    // Efeito para carregar o usuário do localStorage quando o componente é montado
+    // Efeito para verificar autenticação ao carregar a página
     useEffect(() => {
-        const loadUser = () => {
+        // Verifica se há tokens no armazenamento local
+        const checkAuth = async () => {
             try {
-                // Verifica se há um usuário no localStorage
-                const storedUser = authService.getCurrentUser();
-                if (storedUser) {
-                    setUser(storedUser);
+                const accessToken = localStorage.getItem('access_token');
+                const refreshToken = localStorage.getItem('refresh_token');
+
+                if (!accessToken || !refreshToken) {
+                    setLoading(false);
+                    return;
                 }
-            } catch (error) {
-                console.error('Erro ao carregar usuário:', error);
-                // Em caso de erro, limpa os dados de autenticação
-                authService.logout();
+
+                // Configura o cabeçalho de autorização para solicitações
+                api.defaults.headers.common['Authorization'] = `Bearer ${accessToken}`;
+
+                // Verifica se o token é válido obtendo o perfil do usuário
+                const response = await api.get('/users/me/');
+                setUser(response.data);
+            } catch (err) {
+                // Tenta atualizar o token se houver erro
+                try {
+                    await refreshAccessToken();
+                } catch (refreshErr) {
+                    // Se não conseguir atualizar, faz logout
+                    logout();
+                }
             } finally {
                 setLoading(false);
             }
         };
 
-        loadUser();
+        checkAuth();
     }, []);
 
     /**
-     * Função para fazer login do usuário
-     * @param {Object} credentials - Credenciais de login (username e password)
-     * @returns {Promise} Promessa com os dados do usuário
+     * Atualiza o token de acesso usando o token de atualização
+     * @returns {Promise} - Promessa resolvida/rejeitada com resultado da atualização
      */
-    const login = async (credentials) => {
+    const refreshAccessToken = async () => {
         try {
-            const loggedUser = await authService.login(credentials);
-            setUser(loggedUser);
-            return loggedUser;
-        } catch (error) {
-            throw error;
+            const refreshToken = localStorage.getItem('refresh_token');
+
+            if (!refreshToken) {
+                throw new Error('Não há token de atualização');
+            }
+
+            const response = await api.post('/auth/token/refresh/', {
+                refresh: refreshToken
+            });
+
+            const { access } = response.data;
+
+            // Salva o novo token de acesso
+            localStorage.setItem('access_token', access);
+
+            // Atualiza o cabeçalho de autorização
+            api.defaults.headers.common['Authorization'] = `Bearer ${access}`;
+
+            // Obtém informações do usuário novamente
+            const userResponse = await api.get('/users/me/');
+            setUser(userResponse.data);
+
+            return access;
+        } catch (err) {
+            localStorage.removeItem('access_token');
+            localStorage.removeItem('refresh_token');
+            api.defaults.headers.common['Authorization'] = '';
+            setUser(null);
+            throw err;
         }
     };
 
     /**
-     * Função para fazer logout do usuário
+     * Realiza o login do usuário
+     * @param {Object} credentials - Credenciais do usuário (username, password)
+     * @returns {Promise} - Promessa resolvida com informações do usuário
+     */
+    const login = async (credentials) => {
+        try {
+            const response = await api.post('/auth/token/', credentials);
+            const { access, refresh } = response.data;
+
+            // Decodifica o token para obter informações básicas
+            const decoded = jwt_decode(access);
+
+            // Salva os tokens no armazenamento local
+            localStorage.setItem('access_token', access);
+            localStorage.setItem('refresh_token', refresh);
+
+            // Configura o cabeçalho de autorização para solicitações futuras
+            api.defaults.headers.common['Authorization'] = `Bearer ${access}`;
+
+            // Obtém informações completas do usuário
+            const userResponse = await api.get('/users/me/');
+            setUser(userResponse.data);
+
+            return userResponse.data;
+        } catch (err) {
+            throw err;
+        }
+    };
+
+    /**
+     * Registra um novo usuário
+     * @param {Object} userData - Dados do novo usuário
+     * @returns {Promise} - Promessa resolvida com informações do usuário
+     */
+    const register = async (userData) => {
+        try {
+            // Registra o novo usuário
+            await api.post('/auth/register/', userData);
+
+            // Após registro bem-sucedido, faz login com as credenciais
+            const credentials = {
+                username: userData.username,
+                password: userData.password
+            };
+
+            return await login(credentials);
+        } catch (err) {
+            throw err;
+        }
+    };
+
+    /**
+     * Realiza o logout do usuário
      */
     const logout = () => {
-        authService.logout();
+        // Remove os tokens do armazenamento local
+        localStorage.removeItem('access_token');
+        localStorage.removeItem('refresh_token');
+
+        // Remove o cabeçalho de autorização
+        api.defaults.headers.common['Authorization'] = '';
+
+        // Limpa o estado do usuário
         setUser(null);
     };
 
     /**
-     * Função para registrar um novo usuário
-     * @param {Object} userData - Dados do usuário a ser registrado
-     * @returns {Promise} Promessa com a resposta da API
+     * Verifica se o usuário está autenticado
+     * @returns {Boolean} - Verdadeiro se o usuário estiver autenticado
      */
-    const register = async (userData) => {
-        try {
-            await authService.register(userData);
-            // Após o registro bem-sucedido, faz login automaticamente
-            return await login({
-                username: userData.username,
-                password: userData.password
-            });
-        } catch (error) {
-            throw error;
-        }
+    const isAuthenticated = () => {
+        return !!user;
     };
 
-    /**
-     * Função para atualizar o perfil do usuário
-     * @param {Object} userData - Novos dados do usuário
-     * @returns {Promise} Promessa com a resposta da API
-     */
-    const updateProfile = async (userData) => {
-        try {
-            const response = await authService.updateProfile(userData);
-            // Atualiza o usuário no estado e no localStorage
-            const updatedUser = { ...user, ...response.data };
-            setUser(updatedUser);
-            localStorage.setItem('user', JSON.stringify(updatedUser));
-            return response;
-        } catch (error) {
-            throw error;
-        }
-    };
-
-    /**
-     * Função para alterar a senha do usuário
-     * @param {Object} passwordData - Objeto com senhas antiga e nova
-     * @returns {Promise} Promessa com a resposta da API
-     */
-    const changePassword = (passwordData) => {
-        return authService.changePassword(passwordData);
-    };
-
-    // Valor do contexto que será fornecido aos componentes filhos
+    // Valores e funções disponíveis no contexto
     const value = {
         user,
         loading,
-        isAuthenticated: !!user,
         login,
         logout,
         register,
-        updateProfile,
-        changePassword
+        isAuthenticated,
+        refreshAccessToken
     };
 
     return (
@@ -124,18 +182,6 @@ export const AuthProvider = ({ children }) => {
             {children}
         </AuthContext.Provider>
     );
-};
-
-/**
- * Hook personalizado para acessar o contexto de autenticação
- * @returns {Object} Contexto de autenticação
- */
-export const useAuth = () => {
-    const context = useContext(AuthContext);
-    if (!context) {
-        throw new Error('useAuth must be used within an AuthProvider');
-    }
-    return context;
 };
 
 export default AuthContext; 
