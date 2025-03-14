@@ -1,0 +1,8 @@
+/**
+ * Estilos para o componente de área de texto
+ */
+
+.textarea {
+    min-height: 100px;
+    resize: vertical;
+}

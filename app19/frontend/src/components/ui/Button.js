@@ -2,9 +2,8 @@
  * Componente de botão reutilizável
  * Fornece um botão estilizado com várias variantes e tamanhos
  */
-import React from 'react';
+import React, { forwardRef } from 'react';
 import PropTypes from 'prop-types';
-import { Link } from 'react-router-dom';
 import './Button.css';
 
 /**
@@ -21,81 +20,50 @@ import './Button.css';
  * @param {string} props.className - Classes CSS adicionais
  * @param {Object} props.rest - Outras propriedades a serem passadas para o elemento
  */
-const Button = ({
+const Button = forwardRef(({
+    children,
+    type = 'button',
     variant = 'primary',
     size = 'md',
-    to,
-    href,
-    fullWidth,
-    disabled,
+    fullWidth = false,
+    disabled = false,
     onClick,
-    children,
     className = '',
-    ...rest
-}) => {
-    // Classes CSS do botão
-    const buttonClasses = `
-    btn 
-    btn-${variant} 
-    btn-${size} 
-    ${fullWidth ? 'btn-full-width' : ''} 
-    ${className}
-  `.trim();
+    ...props
+}, ref) => {
+    const buttonClasses = [
+        'btn',
+        `btn-${variant}`,
+        `btn-${size}`,
+        fullWidth ? 'btn-block' : '',
+        className
+    ].filter(Boolean).join(' ');
 
-    // Se for um link interno (React Router)
-    if (to) {
-        return (
-            <Link
-                to={to}
-                className={buttonClasses}
-                onClick={onClick}
-                {...rest}
-            >
-                {children}
-            </Link>
-        );
-    }
-
-    // Se for um link externo
-    if (href) {
-        return (
-            <a
-                href={href}
-                className={buttonClasses}
-                onClick={onClick}
-                target="_blank"
-                rel="noopener noreferrer"
-                {...rest}
-            >
-                {children}
-            </a>
-        );
-    }
-
-    // Se for um botão normal
     return (
         <button
+            ref={ref}
+            type={type}
             className={buttonClasses}
-            onClick={onClick}
             disabled={disabled}
-            type={rest.type || 'button'}
-            {...rest}
+            onClick={onClick}
+            {...props}
         >
             {children}
         </button>
     );
-};
+});
+
+Button.displayName = 'Button';
 
 Button.propTypes = {
-    variant: PropTypes.oneOf(['primary', 'secondary', 'success', 'danger', 'outline']),
+    children: PropTypes.node.isRequired,
+    type: PropTypes.oneOf(['button', 'submit', 'reset']),
+    variant: PropTypes.oneOf(['primary', 'secondary', 'success', 'danger', 'warning', 'info', 'light', 'dark', 'link', 'outline-primary', 'outline-secondary', 'outline-success', 'outline-danger', 'outline-warning', 'outline-info', 'outline-light', 'outline-dark']),
     size: PropTypes.oneOf(['sm', 'md', 'lg']),
-    to: PropTypes.string,
-    href: PropTypes.string,
     fullWidth: PropTypes.bool,
     disabled: PropTypes.bool,
     onClick: PropTypes.func,
-    children: PropTypes.node.isRequired,
-    className: PropTypes.string,
+    className: PropTypes.string
 };
 
 export default Button; 

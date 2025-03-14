@@ -1,0 +1,96 @@
+/**
+ * Estilos para o componente de checkbox
+ */
+
+.checkbox-wrapper {
+    margin-bottom: calc(var(--spacing) * 1);
+}
+
+.checkbox-label {
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+    user-select: none;
+}
+
+.checkbox-input {
+    position: absolute;
+    opacity: 0;
+    cursor: pointer;
+    height: 0;
+    width: 0;
+}
+
+.checkbox-custom {
+    position: relative;
+    display: inline-block;
+    width: 18px;
+    height: 18px;
+    background-color: var(--card-bg);
+    border: 1px solid var(--border-color);
+    border-radius: 3px;
+    margin-right: calc(var(--spacing) * 1);
+    transition: all 0.3s;
+}
+
+.checkbox-custom::after {
+    content: '';
+    position: absolute;
+    display: none;
+    left: 5px;
+    top: 2px;
+    width: 5px;
+    height: 10px;
+    border: solid white;
+    border-width: 0 2px 2px 0;
+    transform: rotate(45deg);
+}
+
+.checkbox-input:checked~.checkbox-custom {
+    background-color: var(--primary-color);
+    border-color: var(--primary-color);
+}
+
+.checkbox-input:checked~.checkbox-custom::after {
+    display: block;
+}
+
+.checkbox-input:focus~.checkbox-custom {
+    box-shadow: 0 0 0 0.2rem rgba(var(--primary-rgb), 0.25);
+}
+
+.checkbox-input:disabled~.checkbox-custom {
+    background-color: rgba(0, 0, 0, 0.05);
+    border-color: var(--border-color);
+    cursor: not-allowed;
+}
+
+.checkbox-input:disabled~.checkbox-text {
+    color: var(--gray-color);
+    cursor: not-allowed;
+}
+
+.checkbox-text {
+    font-size: 1rem;
+    color: var(--text-color);
+}
+
+/* Tema escuro */
+[data-theme="dark"] .checkbox-custom {
+    background-color: rgba(255, 255, 255, 0.05);
+    border-color: var(--border-color);
+}
+
+[data-theme="dark"] .checkbox-input:checked~.checkbox-custom {
+    background-color: var(--primary-color);
+    border-color: var(--primary-color);
+}
+
+[data-theme="dark"] .checkbox-input:disabled~.checkbox-custom {
+    background-color: rgba(255, 255, 255, 0.1);
+    border-color: rgba(255, 255, 255, 0.2);
+}
+
+[data-theme="dark"] .checkbox-input:focus~.checkbox-custom {
+    box-shadow: 0 0 0 0.2rem rgba(var(--primary-rgb), 0.4);
+}

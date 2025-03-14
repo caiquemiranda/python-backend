@@ -1,53 +1,99 @@
 /**
- * Estilos para o componente de card
+ * Estilos para o componente de cartão
  */
 
 .card {
-    background-color: var(--card-bg);
-    border-radius: var(--border-radius);
-    box-shadow: var(--box-shadow);
-    margin-bottom: calc(var(--spacing) * 3);
-    overflow: hidden;
-    transition: box-shadow 0.3s, transform 0.3s, background-color 0.3s;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+    word-wrap: break-word;
+    background-color: #fff;
+    background-clip: border-box;
+    border: 1px solid rgba(0, 0, 0, 0.125);
+    border-radius: 0.25rem;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+    transition: box-shadow 0.3s ease-in-out;
 }
 
 .card:hover {
-    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
 .card-header {
-    padding: calc(var(--spacing) * 2) calc(var(--spacing) * 3);
+    padding: 0.75rem 1.25rem;
+    margin-bottom: 0;
     background-color: rgba(0, 0, 0, 0.03);
-    border-bottom: 1px solid var(--border-color);
+    border-bottom: 1px solid rgba(0, 0, 0, 0.125);
 }
 
-.card-title {
-    margin: 0;
-    font-size: 1.25rem;
-    font-weight: 600;
-    color: var(--dark-color);
+.card-header:first-child {
+    border-radius: calc(0.25rem - 1px) calc(0.25rem - 1px) 0 0;
 }
 
 .card-body {
-    padding: calc(var(--spacing) * 3);
+    flex: 1 1 auto;
+    padding: 1.25rem;
 }
 
 .card-footer {
-    padding: calc(var(--spacing) * 2) calc(var(--spacing) * 3);
+    padding: 0.75rem 1.25rem;
     background-color: rgba(0, 0, 0, 0.03);
-    border-top: 1px solid var(--border-color);
+    border-top: 1px solid rgba(0, 0, 0, 0.125);
+}
+
+.card-footer:last-child {
+    border-radius: 0 0 calc(0.25rem - 1px) calc(0.25rem - 1px);
+}
+
+.card-title {
+    margin-bottom: 0.75rem;
+    font-size: 1.25rem;
+    font-weight: 500;
+}
+
+.card-subtitle {
+    margin-top: -0.375rem;
+    margin-bottom: 0.5rem;
+    font-size: 1rem;
+    font-weight: 500;
+    color: #6c757d;
+}
+
+.card-text {
+    margin-bottom: 1rem;
+    line-height: 1.5;
+}
+
+.card-text:last-child {
+    margin-bottom: 0;
+}
+
+.card-img-top {
+    width: 100%;
+    border-top-left-radius: calc(0.25rem - 1px);
+    border-top-right-radius: calc(0.25rem - 1px);
+}
+
+.card-img-bottom {
+    width: 100%;
+    border-bottom-right-radius: calc(0.25rem - 1px);
+    border-bottom-left-radius: calc(0.25rem - 1px);
 }
 
 /* Tema escuro */
-[data-theme="dark"] .card {
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+.dark-theme .card {
+    background-color: #343a40;
+    border-color: rgba(255, 255, 255, 0.125);
+    color: #f8f9fa;
 }
 
-[data-theme="dark"] .card:hover {
-    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
-}
-
-[data-theme="dark"] .card-header,
-[data-theme="dark"] .card-footer {
+.dark-theme .card-header,
+.dark-theme .card-footer {
     background-color: rgba(255, 255, 255, 0.05);
+    border-color: rgba(255, 255, 255, 0.125);
+}
+
+.dark-theme .card-subtitle {
+    color: #adb5bd;
 }
