@@ -1,0 +1,139 @@
+/**
+ * Estilos para o componente de botão
+ */
+
+.btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: calc(var(--spacing) * 1) calc(var(--spacing) * 2);
+    font-size: 1rem;
+    font-weight: 500;
+    line-height: 1.5;
+    text-align: center;
+    white-space: nowrap;
+    vertical-align: middle;
+    cursor: pointer;
+    user-select: none;
+    border: 1px solid transparent;
+    border-radius: var(--border-radius);
+    transition: all 0.3s;
+    text-decoration: none;
+}
+
+/* Variantes */
+.btn-primary {
+    color: white;
+    background-color: var(--primary-color);
+    border-color: var(--primary-color);
+}
+
+.btn-primary:hover:not(:disabled) {
+    background-color: var(--primary-dark);
+    border-color: var(--primary-dark);
+    color: white;
+}
+
+.btn-secondary {
+    color: white;
+    background-color: var(--secondary-color);
+    border-color: var(--secondary-color);
+}
+
+.btn-secondary:hover:not(:disabled) {
+    background-color: #5a6268;
+    border-color: #5a6268;
+    color: white;
+}
+
+.btn-success {
+    color: white;
+    background-color: var(--success-color);
+    border-color: var(--success-color);
+}
+
+.btn-success:hover:not(:disabled) {
+    background-color: #218838;
+    border-color: #1e7e34;
+    color: white;
+}
+
+.btn-danger {
+    color: white;
+    background-color: var(--danger-color);
+    border-color: var(--danger-color);
+}
+
+.btn-danger:hover:not(:disabled) {
+    background-color: var(--danger-dark);
+    border-color: var(--danger-dark);
+    color: white;
+}
+
+.btn-outline {
+    color: var(--primary-color);
+    background-color: transparent;
+    border-color: var(--primary-color);
+}
+
+.btn-outline:hover:not(:disabled) {
+    color: white;
+    background-color: var(--primary-color);
+    border-color: var(--primary-color);
+}
+
+/* Tamanhos */
+.btn-sm {
+    padding: calc(var(--spacing) * 0.5) calc(var(--spacing) * 1.5);
+    font-size: 0.875rem;
+}
+
+.btn-md {
+    padding: calc(var(--spacing) * 1) calc(var(--spacing) * 2);
+    font-size: 1rem;
+}
+
+.btn-lg {
+    padding: calc(var(--spacing) * 1.5) calc(var(--spacing) * 3);
+    font-size: 1.1rem;
+}
+
+/* Largura total */
+.btn-full-width {
+    width: 100%;
+}
+
+/* Estado desabilitado */
+.btn:disabled {
+    opacity: 0.65;
+    cursor: not-allowed;
+    pointer-events: none;
+}
+
+/* Ícones dentro do botão */
+.btn svg {
+    margin-right: calc(var(--spacing) * 0.75);
+}
+
+/* Efeito de foco */
+.btn:focus {
+    outline: 0;
+    box-shadow: 0 0 0 0.2rem rgba(var(--primary-rgb), 0.25);
+}
+
+/* Efeito de clique */
+.btn:active:not(:disabled) {
+    transform: translateY(1px);
+}
+
+/* Tema escuro */
+[data-theme="dark"] .btn-outline {
+    color: var(--primary-light);
+    border-color: var(--primary-light);
+}
+
+[data-theme="dark"] .btn-outline:hover:not(:disabled) {
+    color: var(--dark-color);
+    background-color: var(--primary-light);
+    border-color: var(--primary-light);
+}

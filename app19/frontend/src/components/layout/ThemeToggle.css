@@ -1,0 +1,42 @@
+/**
+ * Estilos para o componente de alternância de tema
+ */
+
+.theme-toggle {
+    background: none;
+    border: none;
+    cursor: pointer;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--text-color);
+    background-color: rgba(var(--primary-rgb), 0.1);
+    transition: all 0.3s ease;
+}
+
+.theme-toggle:hover {
+    background-color: rgba(var(--primary-rgb), 0.2);
+    transform: rotate(15deg);
+}
+
+.theme-icon {
+    font-size: 1.2rem;
+}
+
+/* Animação ao alternar o tema */
+@keyframes spin {
+    0% {
+        transform: rotate(0deg);
+    }
+
+    100% {
+        transform: rotate(360deg);
+    }
+}
+
+.theme-toggle:active .theme-icon {
+    animation: spin 0.5s ease-in-out;
+}
