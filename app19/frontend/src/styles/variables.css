@@ -1,0 +1,142 @@
+/**
+ * Variáveis CSS globais para o sistema
+ * Define cores, espaçamentos, fontes e outros valores reutilizáveis
+ */
+
+:root {
+    /* Cores principais */
+    --primary-color: #007bff;
+    --primary-color-light: #80bdff;
+    --primary-color-dark: #0069d9;
+    --primary-color-darker: #0062cc;
+
+    --secondary-color: #6c757d;
+    --secondary-color-light: #a1a8ae;
+    --secondary-color-dark: #5a6268;
+    --secondary-color-darker: #545b62;
+
+    --success-color: #28a745;
+    --success-color-light: #48c664;
+    --success-color-dark: #218838;
+    --success-color-darker: #1e7e34;
+
+    --danger-color: #dc3545;
+    --danger-color-light: #e4606d;
+    --danger-color-dark: #c82333;
+    --danger-color-darker: #bd2130;
+
+    --warning-color: #ffc107;
+    --warning-color-light: #ffcd39;
+    --warning-color-dark: #e0a800;
+    --warning-color-darker: #d39e00;
+
+    --info-color: #17a2b8;
+    --info-color-light: #4cd3e9;
+    --info-color-dark: #138496;
+    --info-color-darker: #117a8b;
+
+    --light-color: #f8f9fa;
+    --light-color-dark: #e2e6ea;
+    --light-color-darker: #dae0e5;
+
+    --dark-color: #343a40;
+    --dark-color-light: #6c757d;
+    --dark-color-dark: #23272b;
+    --dark-color-darker: #1d2124;
+
+    /* Cores de texto */
+    --text-color: #212529;
+    --text-color-light: #6c757d;
+    --text-color-lighter: #adb5bd;
+    --text-color-dark: #000;
+    --text-color-white: #fff;
+
+    /* Cores de fundo */
+    --bg-color: #fff;
+    --bg-color-light: #f8f9fa;
+    --bg-color-dark: #343a40;
+
+    /* Cores de borda */
+    --border-color: #dee2e6;
+    --border-color-light: #e9ecef;
+    --border-color-dark: #adb5bd;
+
+    /* Espaçamentos */
+    --spacing-xs: 0.25rem;
+    --spacing-sm: 0.5rem;
+    --spacing-md: 1rem;
+    --spacing-lg: 1.5rem;
+    --spacing-xl: 2rem;
+    --spacing-xxl: 3rem;
+
+    /* Fontes */
+    --font-family-base: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    --font-family-monospace: SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+
+    --font-size-xs: 0.75rem;
+    --font-size-sm: 0.875rem;
+    --font-size-md: 1rem;
+    --font-size-lg: 1.25rem;
+    --font-size-xl: 1.5rem;
+    --font-size-xxl: 2rem;
+
+    --font-weight-light: 300;
+    --font-weight-normal: 400;
+    --font-weight-medium: 500;
+    --font-weight-bold: 700;
+
+    /* Bordas */
+    --border-radius-sm: 0.2rem;
+    --border-radius: 0.25rem;
+    --border-radius-lg: 0.3rem;
+    --border-radius-xl: 0.5rem;
+    --border-radius-pill: 50rem;
+    --border-radius-circle: 50%;
+
+    /* Sombras */
+    --box-shadow-sm: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
+    --box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
+    --box-shadow-lg: 0 1rem 3rem rgba(0, 0, 0, 0.175);
+
+    /* Transições */
+    --transition-speed: 0.3s;
+    --transition-timing: ease-in-out;
+
+    /* Z-index */
+    --z-index-dropdown: 1000;
+    --z-index-sticky: 1020;
+    --z-index-fixed: 1030;
+    --z-index-modal-backdrop: 1040;
+    --z-index-modal: 1050;
+    --z-index-popover: 1060;
+    --z-index-tooltip: 1070;
+}
+
+/* Tema escuro */
+.dark-theme {
+    /* Cores principais */
+    --primary-color: #0d6efd;
+    --primary-color-light: #6ea8fe;
+    --primary-color-dark: #0a58ca;
+
+    /* Cores de texto */
+    --text-color: #f8f9fa;
+    --text-color-light: #adb5bd;
+    --text-color-lighter: #6c757d;
+    --text-color-dark: #e9ecef;
+
+    /* Cores de fundo */
+    --bg-color: #212529;
+    --bg-color-light: #343a40;
+    --bg-color-dark: #1a1d20;
+
+    /* Cores de borda */
+    --border-color: #495057;
+    --border-color-light: #6c757d;
+    --border-color-dark: #343a40;
+
+    /* Sombras */
+    --box-shadow-sm: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.3);
+    --box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.4);
+    --box-shadow-lg: 0 1rem 3rem rgba(0, 0, 0, 0.5);
+}
