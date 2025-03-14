@@ -1,0 +1,121 @@
+.profile-page {
+    padding: 40px 0;
+}
+
+.page-title {
+    color: var(--primary-dark);
+    margin-bottom: 30px;
+    text-align: center;
+}
+
+/* Abas de navegação */
+.profile-tabs {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 30px;
+    border-bottom: 1px solid var(--medium-gray);
+}
+
+.tab-btn {
+    background: none;
+    border: none;
+    padding: 15px 25px;
+    font-size: 1rem;
+    font-weight: 500;
+    color: var(--text-color);
+    cursor: pointer;
+    transition: all 0.3s ease;
+    border-bottom: 3px solid transparent;
+    display: flex;
+    align-items: center;
+}
+
+.tab-btn i {
+    margin-right: 8px;
+}
+
+.tab-btn:hover {
+    color: var(--primary-color);
+}
+
+.tab-btn.active {
+    color: var(--primary-color);
+    border-bottom-color: var(--primary-color);
+}
+
+/* Conteúdo do perfil */
+.profile-content {
+    max-width: 600px;
+    margin: 0 auto;
+    background-color: white;
+    border-radius: 8px;
+    padding: 30px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+}
+
+.profile-content h2 {
+    color: var(--primary-dark);
+    margin-bottom: 20px;
+    text-align: center;
+    font-size: 1.5rem;
+}
+
+/* Formulários */
+.profile-form-container,
+.password-form-container {
+    width: 100%;
+}
+
+/* Loading spinner */
+.loading-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 50px 0;
+}
+
+.loading-spinner {
+    width: 50px;
+    height: 50px;
+    border: 5px solid var(--medium-gray);
+    border-top-color: var(--primary-color);
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+    margin-bottom: 20px;
+}
+
+@keyframes spin {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+/* Responsividade */
+@media (max-width: 768px) {
+    .profile-tabs {
+        flex-direction: column;
+        align-items: center;
+        border-bottom: none;
+    }
+
+    .tab-btn {
+        width: 100%;
+        max-width: 300px;
+        justify-content: center;
+        border-bottom: none;
+        border-left: 3px solid transparent;
+        margin-bottom: 10px;
+        padding: 12px 20px;
+    }
+
+    .tab-btn.active {
+        border-bottom-color: transparent;
+        border-left-color: var(--primary-color);
+        background-color: rgba(74, 109, 167, 0.1);
+    }
+
+    .profile-content {
+        padding: 20px;
+    }
+}
