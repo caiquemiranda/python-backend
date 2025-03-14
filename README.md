@@ -6,32 +6,32 @@ Este repositório contém uma série de aplicações backend e fullstack em Pyth
 
 O repositório está organizado em várias aplicações independentes, cada uma construindo sobre os conceitos das anteriores:
 
-### Aplicações Básicas (1-7): Fundamentos com Flask
+### Aplicações Básicas (1-7): Fundamentos com Python e Flask
 
-### App 1 - Hello World com Flask
-- **Conceitos**: Introdução ao desenvolvimento web, rotas básicas
+### App 1 - Servidor HTTP Básico com Python Puro
+- **Conceitos**: Fundamentos de HTTP, servidores web, sockets
+- **Tecnologias**: Python puro (módulo http.server)
+- **Funcionalidades**: Servidor web básico com rotas simples e resposta HTML
+
+### App 2 - CRUD com Arquivos Locais
+- **Conceitos**: Operações CRUD, armazenamento de dados em arquivo
+- **Tecnologias**: Python puro, JSON
+- **Funcionalidades**: Gerenciador de tarefas com armazenamento em arquivos JSON
+
+### App 3 - Mini API com Flask Básico
+- **Conceitos**: APIs REST, framework web, rotas
 - **Tecnologias**: Flask
-- **Funcionalidades**: Servidor web básico com rota "Hello World"
+- **Funcionalidades**: API REST simples para gerenciar um catálogo de produtos
 
-### App 2 - Flask com Templates
-- **Conceitos**: Templates, renderização de HTML
-- **Tecnologias**: Flask, Jinja2
-- **Funcionalidades**: Renderização de páginas HTML usando templates
+### App 4 - CRUD com Flask e SQLite
+- **Conceitos**: Banco de dados, modelos de dados, templates
+- **Tecnologias**: Flask, SQLite, Jinja2
+- **Funcionalidades**: Aplicação web completa de gerenciamento de tarefas com interface e API
 
-### App 3 - Flask com Formulários
-- **Conceitos**: Processamento de formulários, requisições POST
-- **Tecnologias**: Flask, Jinja2, WTForms
-- **Funcionalidades**: Formulários para envio de dados, validação básica
-
-### App 4 - Flask com SQLite
-- **Conceitos**: Banco de dados, modelo de dados
-- **Tecnologias**: Flask, SQLite, SQLAlchemy
-- **Funcionalidades**: CRUD completo, persistência de dados
-
-### App 5 - RESTful API com Flask
-- **Conceitos**: APIs REST, serialização de dados
-- **Tecnologias**: Flask, Flask-RESTful
-- **Funcionalidades**: Endpoints RESTful, JSON
+### App 5 - Autenticação Simples com Flask
+- **Conceitos**: Autenticação de usuários, sessões, segurança
+- **Tecnologias**: Flask, SQLite, hashing de senhas
+- **Funcionalidades**: Sistema de registro, login e área protegida com permissões básicas
 
 ### App 6 - Sistema de Upload de Arquivos
 - **Conceitos**: Upload e gerenciamento de arquivos
@@ -46,9 +46,9 @@ O repositório está organizado em várias aplicações independentes, cada uma 
 ### Aplicações Intermediárias (8-10): FastAPI
 
 ### App 8 - Introdução ao FastAPI
-- **Conceitos**: FastAPI, documentação automática
+- **Conceitos**: FastAPI, documentação automática, Pydantic
 - **Tecnologias**: FastAPI, Pydantic
-- **Funcionalidades**: CRUD com documentação OpenAPI/Swagger
+- **Funcionalidades**: API REST com validação de dados e documentação automática
 
 ### App 9 - CRUD com FastAPI e SQLite
 - **Conceitos**: ORM, validação de dados
@@ -58,69 +58,72 @@ O repositório está organizado em várias aplicações independentes, cada uma 
 ### App 10 - API Avançada com FastAPI, SQLAlchemy e JWT
 - **Conceitos**: Autenticação, autorização, arquitetura modular
 - **Tecnologias**: FastAPI, SQLAlchemy, JWT, Pydantic
-- **Funcionalidades**: Autenticação, controle de acesso, CRUD avançado, tratamento de erros
+- **Funcionalidades**: Autenticação JWT, controle de acesso, CRUD avançado, tratamento de erros
 
-### Aplicações Avançadas (11-20): Projetos Completos
+### Aplicações Fullstack (11-15): Integração Frontend/Backend
 
-### App 11 - Blog com Django
-- **Conceitos**: Django, MTV (Model-Template-View)
-- **Tecnologias**: Django, SQLite
-- **Funcionalidades**: Sistema de blog completo com autenticação
+### App 11 - Comunicação Básica entre Flask e React
+- **Conceitos**: Integração frontend/backend básica
+- **Tecnologias**: Flask, React, CORS
+- **Funcionalidades**: Comunicação simples entre frontend React e backend Flask
 
-### App 12 - E-commerce com Django
-- **Conceitos**: E-commerce, carrinhos de compra
-- **Tecnologias**: Django, PostgreSQL
-- **Funcionalidades**: Produtos, categorias, carrinhos, pedidos
+### App 12 - Formulário React enviando dados para FastAPI
+- **Conceitos**: Formulários, validação de dados
+- **Tecnologias**: FastAPI, React, Pydantic
+- **Funcionalidades**: Formulário React enviando dados para backend FastAPI com validação
 
-### App 13 - API REST com Django REST Framework
-- **Conceitos**: APIs REST em Django
-- **Tecnologias**: Django, Django REST Framework
-- **Funcionalidades**: Endpoints RESTful, serialização
+### App 13 - CRUD Completo com Flask e React
+- **Conceitos**: Operações CRUD fullstack
+- **Tecnologias**: Flask, React, SQLAlchemy
+- **Funcionalidades**: Sistema de gerenciamento de tarefas com interface React e backend Flask
 
-### App 14 - Microsserviços com FastAPI e RabbitMQ
-- **Conceitos**: Microsserviços, mensageria
-- **Tecnologias**: FastAPI, RabbitMQ
-- **Funcionalidades**: Comunicação assíncrona entre serviços
+### App 14 - Aplicação de Notas com Autenticação
+- **Conceitos**: Autenticação JWT, rotas protegidas
+- **Tecnologias**: FastAPI, React, JWT
+- **Funcionalidades**: Sistema de notas com autenticação, criação e compartilhamento
 
-### App 15 - Aplicação Web em Tempo Real
-- **Conceitos**: WebSockets, comunicação em tempo real
-- **Tecnologias**: FastAPI, WebSockets
-- **Funcionalidades**: Chat, notificações em tempo real
+### App 15 - Dashboard de Visualização de Dados
+- **Conceitos**: Visualização de dados, gráficos interativos
+- **Tecnologias**: FastAPI, React, Recharts
+- **Funcionalidades**: Dashboard interativo com diversos tipos de gráficos e visualizações
 
-### App 16 - API GraphQL com Strawberry
-- **Conceitos**: GraphQL, queries e mutations
-- **Tecnologias**: FastAPI, Strawberry
-- **Funcionalidades**: API GraphQL completa
+### Aplicações Avançadas (16-20): Django e Projetos Completos
 
-### App 17 - Sistema de Autenticação OAuth2
-- **Conceitos**: OAuth2, provedores de autenticação
-- **Tecnologias**: FastAPI, OAuth2
-- **Funcionalidades**: Login social, gestão de tokens
+### App 16 - Integração Django e React
+- **Conceitos**: Django REST Framework introdução
+- **Tecnologias**: Django, Django REST Framework, React
+- **Funcionalidades**: Integração básica entre Django REST Framework e React
+
+### App 17 - Gerenciador de Tarefas com Django e React
+- **Conceitos**: CRUD completo com Django
+- **Tecnologias**: Django, Django REST Framework, React, Formik
+- **Funcionalidades**: Gerenciador de tarefas e categorias com interface moderna
 
 ### App 18 - Aplicação React com Autenticação (Fullstack)
-- **Conceitos**: Integração frontend/backend
-- **Tecnologias**: React, Django REST Framework, JWT
+- **Conceitos**: Autenticação JWT com Django
+- **Tecnologias**: Django REST Framework, React, JWT
 - **Funcionalidades**: Sistema de autenticação completo, rotas protegidas, perfil de usuário
 
 ### App 19 - FileShare: Sistema de Upload de Arquivos (Fullstack)
 - **Conceitos**: Upload e gerenciamento de arquivos, interface de usuário
-- **Tecnologias**: React, Django REST Framework
+- **Tecnologias**: Django REST Framework, React
 - **Funcionalidades**: Upload, visualização e compartilhamento de arquivos, tema claro/escuro
 
 ### App 20 - TaskForge: Sistema de Gerenciamento de Projetos e Tarefas (Fullstack)
 - **Conceitos**: Sistema completo de gestão, estruturas de dados complexas
-- **Tecnologias**: React, Django REST Framework, Docker
+- **Tecnologias**: Django REST Framework, React, Docker
 - **Funcionalidades**: Gerenciamento de projetos, tarefas, equipes, dashboards e relatórios
 
 ## Progressão de Aprendizado
 
 Este repositório apresenta uma progressão de aprendizado cuidadosamente estruturada:
 
-1. **Fundamentos (Apps 1-7)**: Conceitos básicos de desenvolvimento web com Flask
-2. **FastAPI (Apps 8-10)**: Transição para um framework moderno com tipagem e melhor desempenho
-3. **Django (Apps 11-13)**: Framework completo com muitos recursos prontos para uso
-4. **Padrões Avançados (Apps 14-17)**: Microsserviços, tempo real, GraphQL e autenticação avançada
-5. **Projetos Fullstack (Apps 18-20)**: Aplicações completas com frontend e backend
+1. **Fundamentos (Apps 1-2)**: Conceitos básicos de desenvolvimento web com Python puro
+2. **Flask e Persistência (Apps 3-7)**: Desenvolvimento com Flask, banco de dados e autenticação
+3. **FastAPI (Apps 8-10)**: Framework moderno com tipagem e melhor desempenho
+4. **Integração Frontend/Backend (Apps 11-15)**: Projetos fullstack com React e Flask/FastAPI
+5. **Django e Aplicações Avançadas (Apps 16-17)**: Introdução ao Django e Django REST Framework
+6. **Projetos Completos (Apps 18-20)**: Aplicações fullstack complexas com Django e React
 
 ## Análise dos Projetos
 
@@ -132,16 +135,18 @@ Cada aplicação foi desenhada para ensinar conceitos específicos através da p
 
 ### Tecnologias Cobertas
 O repositório abrange os principais frameworks Python para desenvolvimento web:
+- **Python puro**: Módulos http.server e socketserver para fundamentos
 - **Flask**: Microframework leve para aplicações simples
 - **FastAPI**: Framework moderno com desempenho e tipagem
-- **Django**: Framework completo para aplicações robustas
+- **Django**: Framework completo para aplicações robustas (a partir do App 16)
+- **Django REST Framework**: Toolkit para APIs RESTful
 
 Além de tecnologias complementares como:
 - Bancos de dados (SQLite, PostgreSQL)
 - ORM (SQLAlchemy, Django ORM)
 - Autenticação (JWT, OAuth2)
-- Mensageria (RabbitMQ)
 - Frontend (React)
+- Visualização de dados (Recharts)
 - Contêineres (Docker)
 
 ### Destaque para os Projetos Fullstack
@@ -188,6 +193,11 @@ Cada aplicação está contida em seu próprio diretório e pode ser executada i
 
 4. Execute a aplicação:
    ```bash
+   # Para aplicações Python puro
+   python app.py
+   # ou
+   python simple_http_server.py
+   
    # Para aplicações Flask
    python app.py
    
@@ -203,6 +213,11 @@ Cada aplicação está contida em seu próprio diretório e pode ser executada i
    cd frontend
    npm install
    npm start
+   ```
+
+6. Para projetos com Docker:
+   ```bash
+   docker-compose up -d
    ```
 
 ## Contribuições

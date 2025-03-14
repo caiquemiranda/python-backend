@@ -1,6 +1,6 @@
 # App18 - Aplicação React com Autenticação
 
-Uma aplicação React que demonstra a implementação de um sistema de autenticação e rotas protegidas.
+Uma aplicação fullstack que demonstra a implementação de um sistema de autenticação completo com React no frontend e Django REST Framework no backend.
 
 ## Descrição do Projeto
 
@@ -169,6 +169,45 @@ O modelo de usuário estende o modelo padrão do Django (`AbstractUser`) e adici
 - `phone` - Número de telefone (CharField)
 - `created_at` - Data de criação (DateTimeField)
 - `updated_at` - Data de atualização (DateTimeField)
+
+## Características do Backend
+
+### Autenticação com JWT
+O sistema utiliza tokens JWT (JSON Web Tokens) para autenticação, oferecendo:
+- Tokens de acesso com curta duração
+- Tokens de atualização para renovar o acesso
+- Proteção contra CSRF
+
+### Validação de dados
+- Validação completa de entradas com serializers
+- Feedback claro de erros para o frontend
+- Proteção contra dados maliciosos
+
+### Permissões
+- Sistema de permissões baseado em autenticação
+- Proteção de endpoints sensíveis
+- Verificação de propriedade de recursos
+
+### CORS (Cross-Origin Resource Sharing)
+- Configuração segura para permitir requisições do frontend
+- Controle de origem, métodos e cabeçalhos permitidos
+
+## Características do Frontend
+
+### Context API
+- Gerenciamento de estado centralizado com AuthContext
+- Hooks personalizados para acesso ao estado
+- Persistência de estado após atualizações da página
+
+### Formulários com validação
+- Validação em tempo real de campos de formulário
+- Feedback visual para usuários
+- Tratamento adequado de erros da API
+
+### Proteção de rotas
+- Roteamento condicional baseado em estado de autenticação
+- Redirecionamento automático para login
+- Preservação da URL desejada após login
 
 ## Contribuição
 
